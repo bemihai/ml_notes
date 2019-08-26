@@ -1,0 +1,47 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{newlfont}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{neuralnetwork}
+
+
+\begin{document}
+
+
+\begin{center}
+\begin{neuralnetwork}[height=5.5]
+    \newcommand{\x}[2]{$x_#2$}
+    \newcommand{\au}[2]{$a^{#1}_#2$}
+    \newcommand{\h}[2]{${h_\theta}_#2$}
+    %\newcommand{\weights}[4]{$\theta^#3_{#4#2}$}
+    % from layer=#1, from node=#2 to layer=#3, to node=#4
+    %\setdefaultlinklabel{\weights}
+    \inputlayer[count=5, bias=true, title=Input, text=\x]
+    \hiddenlayer[count=4, bias=true, title=Hidden, text=\au] \linklayers
+    \hiddenlayer[count=4, bias=true, title=Hidden, text=\au] \linklayers
+    \outputlayer[count=4, title=Output, text=\h] \linklayers
+\end{neuralnetwork}
+\captionof*{figure}{Network with many hidden layer}
+\end{center}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document} 
