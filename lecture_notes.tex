@@ -933,28 +933,51 @@ If we use a regularized cost function, then choosing a very large parameter $\la
 
 \subsection*{Learning curves}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Training only 3 examples will easily have 0 errors because we can always find a quadratic curve that exactly touches 3 points. As the training set gets larger, the error for a quadratic function increases, but it will flatten  out after a certain $m$. We can observe this by drawing learning curves.
 \begin{center}
 \includegraphics[height = 2in]{Images/learn_curve}
 \end{center}
+
+If the algorithm suffers from high bias, then:
+\begin{itemize}
+  \item low training set size causes the training error $J_\textrm{train}(\theta)$ to be low and the cross-validation error $J_\textrm{cv}(\theta)$ to be high,
+  \item large training set size causes both $J_\textrm{train}(\theta)$ and $J_\textrm{cv}(\theta)$ to be high and very close to each other.
+\end{itemize}
+
+\begin{center}
+\includegraphics[height = 2in]{Images/learn_curve_bias}
+\end{center}
+
+If the algorithm suffers from high variance, then:
+\begin{itemize}
+\item low training set size causes low $J_\textrm{train}(\theta)$ and high $J_\textrm{cv}(\theta)$,
+\item large training set size makes $J_\textrm{train}(\theta)$ increasing with training set size and $J_\textrm{cv}(\theta)$ decreasing without leveling off (also, $J_\textrm{train}(\theta) < J_\textrm{cv}(\theta)$, but the difference between them remains significant).
+\end{itemize}
+
+\begin{center}
+\includegraphics[height = 2in]{Images/learn_curve_variance}
+\end{center}
+
+Thus, if a learning algorithm is suffering from high bias, getting more training data will not (by itself) help much. On the other hand, in case of high variance, getting more training data is likely to help.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
