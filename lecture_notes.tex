@@ -913,7 +913,7 @@ To solve this issue, we use an intermediate set to learn $d$, called "cross-vali
   \item Testing set: $\sim 20\%$ of the data, used to estimate the generalization error.
 \end{enumerate}
 
-\subsection*{Bias vs. Variance}
+\section{Bias vs. Variance}
 
 Most of the time, our models will suffer of one of the following problems:
 \begin{description}
@@ -931,7 +931,7 @@ If we use a regularized cost function, then choosing a very large parameter $\la
 \includegraphics[height = 2in]{Images/bias_variance_lambda}
 \end{center}
 
-\subsection*{Learning curves}
+\section{Learning curves}
 
 Training only 3 examples will easily have 0 errors because we can always find a quadratic curve that exactly touches 3 points. As the training set gets larger, the error for a quadratic function increases, but it will flatten  out after a certain $m$. We can observe this by drawing learning curves.
 \begin{center}
@@ -959,6 +959,84 @@ If the algorithm suffers from high variance, then:
 \end{center}
 
 Thus, if a learning algorithm is suffering from high bias, getting more training data will not (by itself) help much. On the other hand, in case of high variance, getting more training data is likely to help.
+
+In the case of a neural network, having fewer parameters makes the algorithm prone to underfitting (but it is computationally cheaper). A large neural network with more parameters is prone to overfitting and can be also computationally expensive. If this is the case, we can use regularization to address the overfitting. Using a single hidden layer is a good starting default. 
+
+In conclusion, when running model diagnostics we should keep in mind the following things:
+\begin{itemize}
+\item More training examples fixes high variance but not high bias.
+\item Fewer features fixes high variance but not high bias.
+\item Additional features fixes high bias but not high variance.
+\item The addition of polynomial and interaction features fixes high bias but not high variance.
+\item When using gradient descent, decreasing $\lambda$ can fix high bias and increasing $\lambda$ can fix high variance ($\lambda$ is the regularization parameter).
+\item When training neural networks, small networks are more prone to underfitting and big networks are prone to overfitting. Cross-validation of network size is a way to choose alternatives.
+\end{itemize}
+
+Usually, we start with a simple algorithm, easy to implement, and test it on cross-validation data (quick dirty model). Then we can plot learning curves to decide what comes next: more data, more features, etc. Finally, we do error analysis, i.e. we analyze cross-validation errors to see if anything systematic can be spotted. 
+
+
+\section{Error metrics for skewed classes}
+
+It is sometimes difficult to tell whether a reduction in error is actually an improvement of the algorithm. For example, in predicting a cancer diagnoses where only $0.5\%$ of the examples have cancer, we find a learning algorithm that has a $1\%$ error. However, if we were to simply classify every single example as a 0, then our error would reduce to $0.5\%$ even though we did not improve the algorithm.
+This usually happens with skewed classes; that is, when we have a lot more examples from one class than from the other class.
+
+Assume we have a binary classification algorithm, where 1 is the positive class and 0 is the negative class (usually the positive class is the rarest). We use the following terminology for model's predictions: 
+\begin{description}
+  \item[True positive:] Predicted: 1, Actual: 1
+  \item[True negative:] Predicted: 0, Actual: 0
+  \item[False negative:] Predicted: 0, Actual, 1
+  \item[False positive:] Predicted: 1, Actual: 0
+\end{description}
+
+The accuracy of the classifier is defined as:
+\begin{equation}\label{df:accuracy}
+\textrm{Accuracy} = \dfrac{\textrm{True positive} + \textrm{True negative}} {\textrm{Total population}}
+\end{equation}
+
+With skewed classes, the accuracy might not be the best metric for deciding the goodness of the classifier, so we also define the precision/recall as:
+\begin{equation}\label{df:precision}
+\textrm{Precision} = \dfrac{\textrm{True positive}}{\textrm{True positive + False positive}} = \dfrac{\textrm{True positive}}{\textrm{Total predicted positive}}
+\end{equation}
+i.e. from all predictions with $y=1$, what fraction actually has $y=1$?
+
+\begin{equation}\label{df:recall}
+\textrm{Recall} = \dfrac{\textrm{True positive}}{\textrm{True positive + False negative}} = \dfrac{\textrm{True positive}}{\textrm{Total actual positive}}
+\end{equation}
+i.e. from all examples with $y=1$, what fraction is correctly predicted?
+
+These two metrics give us a better sense of how our classifier is doing. We want both precision and recall to be high. In the example at the beginning of the section, if we classify all patients as 0, then our recall will be $0$, so despite having a lower error percentage, we can quickly see it has worse recall.
+
+If we want to increase the precision (avoid false positives) then one way to do it is to increase the prediction threshold: predict $y=1$ if $h_\theta(x) > 0.7$ for example (this lowers the recall). If we want to increase the recall (avoid false negatives), then we can decrease the prediction threshold, but this is lowering the precision. To trade off these two metrics and encode them into one number, we define the $F_1$ score as their harmonic mean:
+\begin{equation}\label{df:F1score}
+\textrm{F}_1 \textrm{ score} = 2\cdot \dfrac{\textrm{Precision}\cdot \textrm{Recall}}{\textrm{Precision}+ \textrm{Recall}} 
+\end{equation}
+
+
+\chapter{Support vector machines}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
