@@ -960,7 +960,7 @@ If the algorithm suffers from high variance, then:
 
 Thus, if a learning algorithm is suffering from high bias, getting more training data will not (by itself) help much. On the other hand, in case of high variance, getting more training data is likely to help.
 
-In the case of a neural network, having fewer parameters makes the algorithm prone to underfitting (but it is computationally cheaper). A large neural network with more parameters is prone to overfitting and can be also computationally expensive. If this is the case, we can use regularization to address the overfitting. Using a single hidden layer is a good starting default. 
+In the case of a neural network, having fewer parameters makes the algorithm prone to underfitting (but it is computationally cheaper). A large neural network with more parameters is prone to overfitting and can be also computationally expensive. If this is the case, we can use regularization to address the overfitting. Using a single hidden layer is a good starting default.
 
 In conclusion, when running model diagnostics we should keep in mind the following things:
 \begin{itemize}
@@ -972,7 +972,7 @@ In conclusion, when running model diagnostics we should keep in mind the followi
 \item When training neural networks, small networks are more prone to underfitting and big networks are prone to overfitting. Cross-validation of network size is a way to choose alternatives.
 \end{itemize}
 
-Usually, we start with a simple algorithm, easy to implement, and test it on cross-validation data (quick dirty model). Then we can plot learning curves to decide what comes next: more data, more features, etc. Finally, we do error analysis, i.e. we analyze cross-validation errors to see if anything systematic can be spotted. 
+Usually, we start with a simple algorithm, easy to implement, and test it on cross-validation data (quick dirty model). Then we can plot learning curves to decide what comes next: more data, more features, etc. Finally, we do error analysis, i.e. we analyze cross-validation errors to see if anything systematic can be spotted.
 
 
 \section{Error metrics for skewed classes}
@@ -980,7 +980,7 @@ Usually, we start with a simple algorithm, easy to implement, and test it on cro
 It is sometimes difficult to tell whether a reduction in error is actually an improvement of the algorithm. For example, in predicting a cancer diagnoses where only $0.5\%$ of the examples have cancer, we find a learning algorithm that has a $1\%$ error. However, if we were to simply classify every single example as a 0, then our error would reduce to $0.5\%$ even though we did not improve the algorithm.
 This usually happens with skewed classes; that is, when we have a lot more examples from one class than from the other class.
 
-Assume we have a binary classification algorithm, where 1 is the positive class and 0 is the negative class (usually the positive class is the rarest). We use the following terminology for model's predictions: 
+Assume we have a binary classification algorithm, where 1 is the positive class and 0 is the negative class (usually the positive class is the rarest). We use the following terminology for model's predictions:
 \begin{description}
   \item[True positive:] Predicted: 1, Actual: 1
   \item[True negative:] Predicted: 0, Actual: 0
@@ -1008,39 +1008,102 @@ These two metrics give us a better sense of how our classifier is doing. We want
 
 If we want to increase the precision (avoid false positives) then one way to do it is to increase the prediction threshold: predict $y=1$ if $h_\theta(x) > 0.7$ for example (this lowers the recall). If we want to increase the recall (avoid false negatives), then we can decrease the prediction threshold, but this is lowering the precision. To trade off these two metrics and encode them into one number, we define the $F_1$ score as their harmonic mean:
 \begin{equation}\label{df:F1score}
-\textrm{F}_1 \textrm{ score} = 2\cdot \dfrac{\textrm{Precision}\cdot \textrm{Recall}}{\textrm{Precision}+ \textrm{Recall}} 
+\textrm{F}_1 \textrm{ score} = 2\cdot \dfrac{\textrm{Precision}\cdot \textrm{Recall}}{\textrm{Precision}+ \textrm{Recall}}
 \end{equation}
+
+
 
 
 \chapter{Support vector machines}
 
+\section{Optimization objective}
+
+We describe the optimization objective of a support vector machine (SVM) starting from logistic regression.
+
+Recall that for logistic regression, the hypothesis defined by \ref{eq:log-reg-hyp} is
+$$h_\theta(x) = \dfrac{1}{1 + \mathrm{e}^{-\theta^Tx}},$$
+and the cost function (i.e. the optimization objective) defined by \ref{eq:log-reg-cost} is
+$$\text{cost}(z) = -y\cdot\log\left(\dfrac{1}{1 + \mathrm{e}^{-z}}\right) - (1-y)\cdot\log\left(1-\dfrac{1}{1 + \mathrm{e}^{-z}}\right),$$
+where $z = \theta^Tx$.
+
+Observe that if $y=1$ then the cost function reduces to
+$$\text{cost}_1(z) = -\log\left(\dfrac{1}{1 + \mathrm{e}^{-z}}\right),$$
+and if $y=0$ the cost function reduces to
+$$\text{cost}_0(z) = -\log\left(1-\dfrac{1}{1 + \mathrm{e}^{-z}}\right).$$
+
+We define a new optimization objective for SVM by using some linear approximations of $\text{cost}_0(z)$ and $\text{cost}_1(z)$ described in the following figures.
+
+\begin{center}
+\begin{minipage}{0.48\textwidth}
+ \centering
+ \includegraphics[width=.8\linewidth]{Images/cost_1_approx}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+ \centering
+ \includegraphics[width=.8\linewidth]{Images/cost_0_approx}
+\end{minipage}
+\end{center}
+
+More precisely, we modify $\text{cost}_1(z)$ so that when $z = \theta^Tx$ is greater than 1, it outputs 0. Furthermore, for values of $z$ less than 1, we use a straight decreasing line instead of the sigmoid curve.
+Similarly, we modify $\text{cost}_0(z)$ so that when $z$ is less than -1, it outputs 0. Again, for values of $z$ greater than -1, we use a straight increasing line instead of the sigmoid curve.
+
+Formally, we can define $\text{cost}_0(z)$ and $\text{cost}_1(z)$ as follows (they are also called hinge loss functions):
+\begin{equation}\label{eq:hinge-loss}
+\begin{split}
+\text{cost}_0(z) = \text{max}(0,k(1+z)),\\
+\text{cost}_1(z) = \text{max}(0,k(1−z)),
+\end{split}
+\end{equation}
+where $k$ is a constant defining the magnitude of the slope of the line.
+
+Putting all these together, we define the regularized cost function for SVM by
+\begin{equation}\label{eq:svm-cost}
+J(\theta) = C\displaystyle\sum_{i=1}^m \left[y^{i}\text{cost}_1(z^{i}) + (1 - y^{i})\text{cost}_0(z^{i})\right] + \dfrac{1}{2}\sum_{j=1}^n \theta^2_j.
+\end{equation}
+
+This definition of $J(\theta)$ is the same as the corresponding definition \ref{eq:log-reg-costreg} for regularized logistic regression, up to some minor changes. First of all, $\text{cost}_0(z)$ and $\text{cost}_1(z)$ are the ones given by the formula \ref{eq:hinge-loss}. Then we multiply by $m$ (the training set size), since this does not affect the optimization result. Furthermore, for the regularization part we use a large constant $C$ instead of $\lambda$ (this is equivalent to multiplying the equation by $C = \dfrac{1}{\lambda}$). Now, to reduce overfitting, we can decrease $C$, and to reduce underfitting, we can increase $C$.
+
+With these changes, the hypothesis $h_\theta$ of the SVM becomes a discriminant function, i.e. it outputs either 1 or 0. This is different from logistic regression, where the hypothesis outputs the probability of $y$ being 1 or 0. Actually, we have that $h_\theta(x) = 1$ if $\theta^Tx \ge 1$ and $h_\theta(x) = 0$ if $\theta^Tx \le -1$, which makes SVM to be a large margin classifier (see the figure below). 
+
+\hspace{1.0in}
+\begin{center}
+\includegraphics[height = 1.8in]{Images/svm}
+\end{center}
+
+In SVM, the decision boundary has the special property that it is as far away as possible from both the positive and the negative examples. The distance from the decision boundary to the nearest example is called the margin. Since SVM maximizes this margin, it is often described as a large margin classifier. Notice that a large margin is only achieved when the regularization constant $C$ is very large. Thus, if we have outliers that can affect the decision boundary, we can reduce $C$.
 
 
+\section{SVM with kernel}
 
+Kernels allow us to make complex, non-linear classifiers using SVM. 
 
+Given a training example $x$, we choose some landmark $l^{1}, l^{2}, \ldots, l^{k}$ in the training space and compute new features depending on the proximity to these landmarks. To do this, we define the similarity $f_j$ of $x$ and $l^{j}$ by using the Gaussian kernel function
+$$f_j = \ds\exp\left(-\frac{\norm{x - l^{j}}^2}{2\sigma^2}\right),$$
+where $\sigma$ is a parameter of the Gaussian kernel. 
 
+Observe that if $x$ is very close to a landmark $l^{j}$, then the corresponding similarity $f_j$ is very close to 1. On the other hand, if $x$ is far away from $l^{j}$, then $f_j$ is close to 0. Thus, one can say that $f_j$ measures how far is $x$ from the landmark $l^{j}$.
+ 
+Since each landmark provides us with a new feature, we can define a new hypothesis $h_\theta$ by
+$$h_\theta(x) = \theta_0 + \ds\sum_{j=1}^{k}{\theta_j f_j},$$
+and predict $y=1$ if $h_\theta(x) \ge 0$ and $y=0$ if $h_\theta(x) < 0$. 
 
+Notice that choosing a particular set of landmarks defines the shape of the decision boundary, as in the following figure.
 
+\hspace{1.0in}
+\begin{center}
+\includegraphics[height = 1.8in]{Images/kernel}
+\end{center}
 
+We can choose the landmarks to be exactly the training examples. Given a training set $(x^1, y^1), \ldots, (x^m, y^m)$, take $l^{j} = x^j$, and define the features $f_j$ as above, for all $j=1, \ldots, m$.
 
+Each training example $(x^i, y^j)$ defines a vector of features $f^i = [f^i_0, f^i_1, \ldots, f^i_m]^T \in \mathbb{R}^{m+1}$, where $f^i_0 = 1$ and $f^i_j$ is the similarity between $x^i$ and $l^j$.
 
+Then, given a new impute $x$ we compute the corresponding feature vector $f\in\mathbb{R}^{m+1}$ and predict $y=1$ if $\theta^Tf \ge 0$  and $y=0$ if $\theta^Tf < 0$, where the parameters vector $\theta$ minimizes the following SVM cost function:
+$$ J(\theta) = C\sum_{i=1}^m \left[y^{i}\text{cost}_1(\theta^Tf^{i}) + (1 - y^{i})\text{cost}_0(\theta^Tf^{i})\right] + \dfrac{1}{2}\sum_{j=1}^n \theta^2_j.$$ 
 
+A very large value of $C$ implies overfitting (low bias, high variance), while a very small value of $C$ implies underfitting (high bias, low variance). 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Using kernels to generate features is not exclusive to SVM and may also be applied to logistic regression. However, kernels combined with SVM are much faster comparing with other algorithms.
 
 
 
