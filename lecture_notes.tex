@@ -1063,7 +1063,7 @@ J(\theta) = C\displaystyle\sum_{i=1}^m \left[y^{i}\text{cost}_1(z^{i}) + (1 - y^
 
 This definition of $J(\theta)$ is the same as the corresponding definition \ref{eq:log-reg-costreg} for regularized logistic regression, up to some minor changes. First of all, $\text{cost}_0(z)$ and $\text{cost}_1(z)$ are the ones given by the formula \ref{eq:hinge-loss}. Then we multiply by $m$ (the training set size), since this does not affect the optimization result. Furthermore, for the regularization part we use a large constant $C$ instead of $\lambda$ (this is equivalent to multiplying the equation by $C = \dfrac{1}{\lambda}$). Now, to reduce overfitting, we can decrease $C$, and to reduce underfitting, we can increase $C$.
 
-With these changes, the hypothesis $h_\theta$ of the SVM becomes a discriminant function, i.e. it outputs either 1 or 0. This is different from logistic regression, where the hypothesis outputs the probability of $y$ being 1 or 0. Actually, we have that $h_\theta(x) = 1$ if $\theta^Tx \ge 1$ and $h_\theta(x) = 0$ if $\theta^Tx \le -1$, which makes SVM to be a large margin classifier (see the figure below). 
+With these changes, the hypothesis $h_\theta$ of the SVM becomes a discriminant function, i.e. it outputs either 1 or 0. This is different from logistic regression, where the hypothesis outputs the probability of $y$ being 1 or 0. Actually, we have that $h_\theta(x) = 1$ if $\theta^Tx \ge 1$ and $h_\theta(x) = 0$ if $\theta^Tx \le -1$, which makes SVM to be a large margin classifier (see the figure below).
 
 \hspace{1.0in}
 \begin{center}
@@ -1075,17 +1075,17 @@ In SVM, the decision boundary has the special property that it is as far away as
 
 \section{SVM with kernel}
 
-Kernels allow us to make complex, non-linear classifiers using SVM. 
+Kernels allow us to make complex, non-linear classifiers using SVM.
 
 Given a training example $x$, we choose some landmark $l^{1}, l^{2}, \ldots, l^{k}$ in the training space and compute new features depending on the proximity to these landmarks. To do this, we define the similarity $f_j$ of $x$ and $l^{j}$ by using the Gaussian kernel function
 $$f_j = \ds\exp\left(-\frac{\norm{x - l^{j}}^2}{2\sigma^2}\right),$$
-where $\sigma$ is a parameter of the Gaussian kernel. 
+where $\sigma$ is a parameter of the Gaussian kernel.
 
 Observe that if $x$ is very close to a landmark $l^{j}$, then the corresponding similarity $f_j$ is very close to 1. On the other hand, if $x$ is far away from $l^{j}$, then $f_j$ is close to 0. Thus, one can say that $f_j$ measures how far is $x$ from the landmark $l^{j}$.
- 
+
 Since each landmark provides us with a new feature, we can define a new hypothesis $h_\theta$ by
 $$h_\theta(x) = \theta_0 + \ds\sum_{j=1}^{k}{\theta_j f_j},$$
-and predict $y=1$ if $h_\theta(x) \ge 0$ and $y=0$ if $h_\theta(x) < 0$. 
+and predict $y=1$ if $h_\theta(x) \ge 0$ and $y=0$ if $h_\theta(x) < 0$.
 
 Notice that choosing a particular set of landmarks defines the shape of the decision boundary, as in the following figure.
 
@@ -1099,38 +1099,84 @@ We can choose the landmarks to be exactly the training examples. Given a trainin
 Each training example $(x^i, y^j)$ defines a vector of features $f^i = [f^i_0, f^i_1, \ldots, f^i_m]^T \in \mathbb{R}^{m+1}$, where $f^i_0 = 1$ and $f^i_j$ is the similarity between $x^i$ and $l^j$.
 
 Then, given a new impute $x$ we compute the corresponding feature vector $f\in\mathbb{R}^{m+1}$ and predict $y=1$ if $\theta^Tf \ge 0$  and $y=0$ if $\theta^Tf < 0$, where the parameters vector $\theta$ minimizes the following SVM cost function:
-$$ J(\theta) = C\sum_{i=1}^m \left[y^{i}\text{cost}_1(\theta^Tf^{i}) + (1 - y^{i})\text{cost}_0(\theta^Tf^{i})\right] + \dfrac{1}{2}\sum_{j=1}^n \theta^2_j.$$ 
+$$ J(\theta) = C\sum_{i=1}^m \left[y^{i}\text{cost}_1(\theta^Tf^{i}) + (1 - y^{i})\text{cost}_0(\theta^Tf^{i})\right] + \dfrac{1}{2}\sum_{j=1}^n \theta^2_j.$$
 
-A very large value of $C$ implies overfitting (low bias, high variance), while a very small value of $C$ implies underfitting (high bias, low variance). 
+A very large value of $C$ implies overfitting (low bias, high variance), while a very small value of $C$ implies underfitting (high bias, low variance).
 
 Using kernels to generate features is not exclusive to SVM and may also be applied to logistic regression. However, kernels combined with SVM are much faster comparing with other algorithms.
 
 
+\subsubsection*{How to use a SVM}
+
+To use a SVM in practice, we have to
+\begin{itemize}
+\item choose the regularization parameter $C=\dfrac{1}{\lambda}$:
+\begin{itemize}
+  \item if $C$ is large, then we have higher variance/lower bias,
+  \item If $C$ is small, then we have lower variance/higher bias,
+\end{itemize}
+\item choose the kernel (similarity function)
+\begin{itemize}
+\item no kernel (or linear kernel) - gives a standard linear classifier, works well when $n$ is large and when $m$ is small,
+\item Gaussian Kernel - needs feature scaling and a choice of $\sigma^2$, works well when $n$ is small and $m$ is large.
+\end{itemize}
+\end{itemize}
+
+We can optimize $C$ and the kernel parameters using a cross-validation set. 
+
+Notice that not all the similarity functions are valid kernels (they must satisfy a technical condition for convergence called Mercer's theorem).
+
+SVM can be used for multiclass classification with the one-vs-all method we used for logistic regression. If there are $k$ different classes, then we train $k$ SVMs with parameters $\theta^1, \theta^2, \ldots, \theta^k$ and, for an input $x$, we pick the class $j$ with the largest $(\theta^i)^Tx$.
+
+\subsubsection*{Logistic regression vs. SVM}
+
+\begin{itemize}
+  \item if $n$ is large (relative to $m$), use logistic regression or SVM with linear kernel (they are very similar),
+  \item if $n$ is small and $m$ is intermediate, use SVM with Gaussian kernel,
+  \item if $n$ is small and $m$ is large, create more features and used linear methods. 
+\end{itemize}
+
+A neural network is likely to work well for all these cases, but may be slower to train. 
 
 
+\chapter{Unsupervised Learning}
+
+Unsupervised learning is opposite to supervised learning because it uses unlabeled data rather than labeled data. In other words, there is no vector $y$ of expected prediction, but only a dataset of features where we need to find structure. 
+
+\section{Clustering: K-Means Algorithm}
+
+Clustering refers to the task of grouping a set of data points in such a way that points in the same group (called cluster) are more similar, in a particular sense, to each other than to those in other groups. The k-means algorithm is the most popular and widely used algorithm for solving such a problem. 
+
+Assume that we have an unlabeled dataset $x^1, \ldots, x^m \in \mathbb{R}^n$ that we want to group in $K$ different clusters ($K < m$). 
+
+\begin{description}
+  \item[Initialization] Randomly initialize $K$ cluster centroids $\mu_1, \mu_2, \ldots, \mu_K\ \in \mathbb{R}^n$.
+  \item[Cluster assignment] Assign all examples into one of the groups based on which centroid the example is closest to and record the cluster index:
+  $$c^{(i)} := \text{argmin}_{k}{\norm{x^i - \mu_k}^2}\; ; \; i=1,\ldots,m. $$
+  \item[Move centroid] Compute the averages of all the points inside each groups, then move the cluster centroid points to those averages:
+  $$\mu_k := \text{average of } \{x^i \;|\; c^{(i)} = k\}\; ; \; k=1,\ldots,K.$$
+  \item[Convergence] Repeat the previous step until the centroids don't move anymore. 
+\end{description}
+
+We can formally define a cost function for the K-means algorithm (also called distortion):
+$$J(c, \mu) = \dfrac{1}{m} \sum_{i=1}^{m}{\norm{x^i - \mu_{c^{(i)}}}^2},$$ where $c = (c^{(1)}, \ldots, c^{(m)})$ and $\mu = (\mu_1, \ldots, \mu_K)$.
+Then the objective of the algorithm is to minimize $J(c, \mu)$ in terms of $c$ (cluster assignment) and $\mu$ (move centroids).
+
+Remark that it is not possible for the cost function $J(c, \mu)$ to increase, it should descend at each step.   
+
+K-means algorithm can get stuck in local optima of $J(c, \mu)$, depending on the initial centroids assignment. We can try many different random initializations and choose the one with the lowest distortion (it is strongly recommended to do this when $K<10$). We also need to make sure that $K < m$ and that the initial centroids are unique. 
+
+If there is no clue on how to choose the number of clusters, we can automatically do that by doing an elbow analysis.  The cost function should reduce as we increase the number of clusters, and then flatten out. Choose $K$ at the point where the cost function starts to flatten out. However, fairly often, the curve is very gradual, so there's no clear elbow. The cost function $J$ will always decrease as $K$ increases. The one exception is if $K$-means gets stuck at a bad local optimum.
+
+\hspace{1.0in}
+\begin{center}
+\includegraphics[height = 1.8in]{Images/elbow}
+\end{center}
+
+Another way to choose $K$ is to observe how well $K$-means performs on a downstream purpose. In other words, we can choose $K$ that proves to be most useful for the goal we are trying to achieve by using these clusters.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\section{Dimensionality reduction: PCA}
 
 
 
