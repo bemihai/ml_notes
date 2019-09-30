@@ -1186,9 +1186,9 @@ Another motivation for dimensionality reduction may be data visualization. It is
 
 \subsection*{Principal component analysis}
 
-The most popular dimensionality reduction algorithm is Principal Component Analysis (PCA). For example, given two features, we want to find a single feature that effectively describes both features at once. We then map our old features onto this new feature to reduce their number from two to one. The same can be done with three features, where we map them to a 2-dimensional plane. 
+The most popular dimensionality reduction algorithm is Principal Component Analysis (PCA). For example, given two features, we want to find a single feature that effectively describes both features at once. We then map our old features onto this new feature to reduce their number from two to one. The same can be done with three features, where we map them to a 2-dimensional plane.
 
-The goal of PCA is to reduce the feature space from $n$ dimensions to $k$ dimensions, where $k < n$. To do this, we find a $k$-dimensional space onto which to project the data in such that the (orthogonal) projection error is minimal. More precisely, we find $k$ vectors $u^1, u^2, \ldots, u^k$ and take their linear span to project onto. 
+The goal of PCA is to reduce the feature space from $n$ dimensions to $k$ dimensions, where $k < n$. To do this, we find a $k$-dimensional space onto which to project the data in such that the (orthogonal) projection error is minimal. More precisely, we find $k$ vectors $u^1, u^2, \ldots, u^k$ and take their linear span to project onto.
 
 Assume that we have a training set $\{x^1, x^2, \ldots, x^m\}$ of $n$-dimensional vectors. Before doing PCA, we must do some data pre-processing (feature scaling/mean normalization), since we want our features to have comparable range of values.
 
@@ -1197,16 +1197,16 @@ For each feature $x_j$, define $\mu_j = \dfrac{1}{m}\ds\sum_{i=1}^{m}{x^i_j}$ an
 After the data pre-processing step, we compute the covariance matrix of the initial dataset: $$\Sigma = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i(x^i)^T}.$$
 Notice that $x^i$ is an $(n\times 1)$-dimensional vector and $(x^i)^T$ is an $(1\times n)$-dimensional vector, thus $\Sigma$ is an $(n\times n)$-dimensional matrix.
 
-Then we compute the eigenvectors $U = [u^1, u^2, \ldots, u^n]$ of $\Sigma$, which are vectors in $\mathbb{R}^n$ since $\Sigma$ is a symmetric semi-positive definite matrix. To reduce our initial $n$-dimensional feature space, we keep only the first $k$ eigenvectors $U_\text{pr} = [u^1, u^2, \ldots, u^k]$, $k<n$, called principal components. Then, for each $i=1,\ldots, m$, we define the reduced features 
-$$z^i := U_\text{pr}^T x^i \in \mathbb{R}^k.$$ 
+Then we compute the eigenvectors $U = [u^1, u^2, \ldots, u^n]$ of $\Sigma$, which are vectors in $\mathbb{R}^n$ since $\Sigma$ is a symmetric semi-positive definite matrix. To reduce our initial $n$-dimensional feature space, we keep only the first $k$ eigenvectors $U_\text{pr} = [u^1, u^2, \ldots, u^k]$, $k<n$, called principal components. Then, for each $i=1,\ldots, m$, we define the reduced features
+$$z^i := U_\text{pr}^T x^i \in \mathbb{R}^k.$$
 Once we use PCA to compress the data, we can always reconstruct back the initial features. The we get back the approximations of out initial features $$x_{\text{approx}}^i = Uz^i,$$ where $U$ is the matrix of all eigenvalues of $\Sigma$.
 
 
-There is one problem remaining, how do we choose k, the number of principal components? One way we do this in practice is to choose $k$ to be the smallest value so that 
+There is one problem remaining, how do we choose k, the number of principal components? One way we do this in practice is to choose $k$ to be the smallest value so that
 $$\dfrac{\frac{1}{m}\sum_{i=1}^{m}{\norm{x^i - x_{\text{approx}}^i}^2}}{\frac{1}{m}\sum_{i=1}^{m}{\norm{x^i}^2}} \leq 0.01$$
 In other words, the squared projection error divided by the total variation in data should be less than 1\%, so that 99\% of the variance is retained.
 
-The most common use of PCA is to speed up supervised learning algorithms. Given a training set with a large number of features $\{x^i\in\mathbb{R}^n, y^i\}$, we use PCA to obtain a new training set $\{z^i\in\mathbb{R}^k, y^i\}$, where $k<n$. Mapping $x^i$ onto $z^i$ should be learned only on the training set and then used on test, validation sets, etc. 
+The most common use of PCA is to speed up supervised learning algorithms. Given a training set with a large number of features $\{x^i\in\mathbb{R}^n, y^i\}$, we use PCA to obtain a new training set $\{z^i\in\mathbb{R}^k, y^i\}$, where $k<n$. Mapping $x^i$ onto $z^i$ should be learned only on the training set and then used on test, validation sets, etc.
 
 It is a bad practice to use PCA for feature selection or overfitting prevention since the dimensionality reduction doesn't use the labels (use regularization instead). Do not assume that you need dimensionality reduction, just try the full algorithm first and then use dimensionality reduction to speed up the training.
 
@@ -1215,133 +1215,288 @@ It is a bad practice to use PCA for feature selection or overfitting prevention 
 
 \section{Anomaly detection}
 
-\subsection{Build anomaly detectors}
+\subsection*{Build anomaly detectors}
 
-Anomaly detection is a popular learning algorithm used in fraud detection, manufacturing, system monitoring, etc. 
+Anomaly detection is a popular learning algorithm used in fraud detection, manufacturing, system monitoring, etc.
 
 Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ and, for any new example $x_{test}$, we want to know whether this new example is abnormal/anomalous (e.g. fraud, manufacturing defect, system error, etc.).
 
-We define a model $p(x)$ that tells us the probability that the example is not anomalous. We also use a threshold $\varepsilon$ as a dividing line so we can say which examples are anomalous and which are not. 
+We define a model $p(x)$ that tells us the probability that the example is not anomalous. We also use a threshold $\varepsilon$ as a dividing line so we can say which examples are anomalous and which are not.
 If the detector is flagging too many anomalous examples, then we need to decrease the threshold $\varepsilon$.
 
-Recall the normal (Gaussian) distribution $\mathcal{N}(\mu, \sigma^2)$ density function 
-$$p(x) = \dfrac{1}{\sigma\sqrt{2\pi}} \exp\left(-\dfrac{(x-\mu)^2}{2\sigma^2}\right).$$ 
+Recall the normal (Gaussian) distribution $\mathcal{N}(\mu, \sigma^2)$ density function
+$$p(x) = \dfrac{1}{\sigma\sqrt{2\pi}} \exp\left(-\dfrac{(x-\mu)^2}{2\sigma^2}\right).$$
 
 Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ that is normally distributed $\mathcal{N}(\mu, \sigma^2)$. We can estimate $\mu$ from data by taking the sample mean
 $$\mu = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i},$$
 and $\sigma^2$ by taking the sample variance
 $$\sigma^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x^i - \mu)}^2.$$
 
-To estimate the density function $p(x)$ for the training set $\{x^1, x^2,\ldots, x^m\}$, we assume that the features $x_j$ are normally distributed $\mathcal{N}(\mu_j, \sigma_j^2)$ (the features should not be necessarily independent, but the algorithm works better of they are). 
+To estimate the density function $p(x)$ for the training set $\{x^1, x^2,\ldots, x^m\}$, we assume that the features $x_j$ are normally distributed $\mathcal{N}(\mu_j, \sigma_j^2)$ (the features should not be necessarily independent, but the algorithm works better of they are).
 
 We first estimate the parameters $\mu_j$ and $\sigma_j^2$ as above
 $$\mu_j = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x_j^i}  \; ; \;\;\;  \sigma_j^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x_j^i - \mu_j)}^2.$$
 
-Then we define $p(x)$ as the product of the feature densities 
+Then we define $p(x)$ as the product of the feature densities
 $$ p(x) := \ds\prod_{j=1}^{n}{p(x_j; \mu_j, \sigma_j^2)} = \prod_{j=1}^{n}\dfrac{1}{\sigma_j\sqrt{2\pi}} \exp\left(-\dfrac{(x_j-\mu_j)^2}{2\sigma_j^2}\right).$$
 
-Thus, whenever we have a new example $x$, we compute $p(x)$ and say that $x$ is an anomaly if $p(x) < \varepsilon$, for a small threshold $\varepsilon$. 
+Thus, whenever we have a new example $x$, we compute $p(x)$ and say that $x$ is an anomaly if $p(x) < \varepsilon$, for a small threshold $\varepsilon$.
 
-\subsection{Evaluate anomaly detectors}
+\subsection*{Evaluate anomaly detectors}
 
-To evaluate our learning algorithm, we take some labeled data, categorized into anomalous and non-anomalous examples ( y = 0 if normal, y = 1 if anomalous).
+To evaluate an anomaly detector, we take a labeled data set, categorized into anomalous and non-anomalous examples ($y = 0$ if normal and $y = 1$ if anomalous). Among the data, take a large proportion of good, non-anomalous data for the training set on which to train $p(x)$. Then, take a smaller proportion of mixed anomalous and non-anomalous examples (you will usually have many more non-anomalous examples) for your cross-validation and test sets. For example, we may have a set where 0.2\% of the data is anomalous. We take 60\% of those examples, all of which are good ($y=0$) for the training set. We then take 20\% of the examples for the cross-validation set (with 0.1\% of the anomalous examples) and another 20\% from the test set (with another 0.1\% of the anomalous). In other words, we split the data 60/20/20 training/CV/test and then split the anomalous examples 50/50 between the CV and test sets.
 
-Among that data, take a large proportion of good, non-anomalous data for the training set on which to train p(x).
+Fit the model $p(x)$ on the training set $\{x^1,\ldots ,x^m\}$. On a cross validation/test example $x$, predict: if $p(x) < \varepsilon$ (anomaly), then $y=1$ and if $p(x) ≥ \varepsilon$ (normal), then $y=0$. Possible evaluation metrics: precision/recall, $F_1$ score. We use the cross-validation set to choose parameter $\varepsilon$.
 
-Then, take a smaller proportion of mixed anomalous and non-anomalous examples (you will usually have many more non-anomalous examples) for your cross-validation and test sets.
+\subsection*{Anomaly detection vs. supervised learning}
 
-For example, we may have a set where 0.2% of the data is anomalous. We take 60% of those examples, all of which are good (y=0) for the training set. We then take 20% of the examples for the cross-validation set (with 0.1% of the anomalous examples) and another 20% from the test set (with another 0.1% of the anomalous).
+Use anomaly detection when:
 
-In other words, we split the data 60/20/20 training/CV/test and then split the anomalous examples 50/50 between the CV and test sets.
+We have a very small number of positive examples ($y=1$: 0-20 examples is common) and a large number of negative ($y=0$) examples.
 
-Algorithm evaluation:
-
-Fit model p(x) on training set {x(1),…,x(m)}
-On a cross validation/test example x, predict:
-
-If p(x) < ϵ (anomaly), then y=1
-
-If p(x) ≥ ϵ (normal), then y=0
-
-Possible evaluation metrics (see "Machine Learning System Design" section):
-
-True positive, false positive, false negative, true negative.
-Precision/recall
-F_1F
-1
-​	  score
-Note that we use the cross-validation set to choose parameter ϵ
-
-\subsection{Anomaly detection vs. supervised learning}
-
-When do we use anomaly detection and when do we use supervised learning?
-
-Use anomaly detection when...
-
-We have a very small number of positive examples (y=1 ... 0-20 examples is common) and a large number of negative (y=0) examples.
 We have many different "types" of anomalies and it is hard for any algorithm to learn from positive examples what the anomalies look like; future anomalies may look nothing like any of the anomalous examples we've seen so far.
-Use supervised learning when...
+
+Use supervised learning when:
 
 We have a large number of both positive and negative examples. In other words, the training set is more evenly divided into classes.
+
 We have enough positive examples for the algorithm to get a sense of what new positives examples look like. The future positive examples are likely similar to the ones in the training set.
 
-Choosing What Features to Use
-The features will greatly affect how well your anomaly detection algorithm works.
+Choosing Features
 
-We can check that our features are gaussian by plotting a histogram of our data and checking for the bell-shaped curve.
+The features will greatly affect how well your anomaly detection algorithm works. We can check that our features are gaussian by plotting a histogram of our data and checking for the bell-shaped curve.
 
-Some transforms we can try on an example feature x that does not have the bell-shaped curve are:
-
-log(x)
-log(x+1)
-log(x+c) for some constant
-\sqrt{x}
-x
-​	
-x^{1/3}x
-1/3
-
-We can play with each of these to try and achieve the gaussian shape in our data.
-
+Some transforms we can try on an example feature x that does not have the bell-shaped curve are: $\log(x)$, $\log(1+x)$, $\sqrt{x}$, $x^{1/3}$. We can play with each of these to try and achieve the gaussian shape in our data.
 There is an error analysis procedure for anomaly detection that is very similar to the one in supervised learning.
-
-Our goal is for p(x) to be large for normal examples and small for anomalous examples.
-
-One common problem is when p(x) is similar for both types of examples. In this case, you need to examine the anomalous examples that are giving high probability in detail and try to figure out new features that will better distinguish the data.
-
+Our goal is for $p(x)$ to be large for normal examples and small for anomalous examples.
+One common problem is when $p(x)$ is similar for both types of examples. In this case, you need to examine the anomalous examples that are giving high probability in detail and try to figure out new features that will better distinguish the data.
 In general, choose features that might take on unusually large or small values in the event of an anomaly.
 
-\subsection{Multivariate Gaussian Distribution}
 
+\subsection*{Multivariate Gaussian Distribution}
 
 The multivariate gaussian distribution is an extension of anomaly detection and may (or may not) catch more anomalies.
 
-Instead of modeling p(x_1),p(x_2),\dotsp(x
-1
-​	 ),p(x
-2
-​	 ),… separately, we will model p(x) all in one go. Our parameters will be: μ∈Rn and Σ∈Rn×n
-p(x;μ,Σ)=1(2π)n/2|Σ|1/2exp(−1/2(x−μ)TΣ−1(x−μ))
+Instead of modeling $p(x_1),p(x_2),\ldots, p(x_m)$, separately, we will model $p(x)$ all in one go. Our parameters will be: $\mu \in \mathbb{R}^n$ and $\Sigma\in \mathbb{R}^{n\times n}$ and
+$$p(x;\mu,\Sigma) = \dfrac{1}{(2\pi)^{n/2} |\Sigma|^{1/2}} \exp(-1/2(x-\mu)^T\Sigma^{-1}(x-\mu)).$$
 The important effect is that we can model oblong gaussian contours, allowing us to better fit data that might not fit into the normal circular contours.
+Varying $\Sigma$ changes the shape, width, and orientation of the contours. Changing $\mu$ will move the center of the distribution.
 
-Varying Σ changes the shape, width, and orientation of the contours. Changing μ will move the center of the distribution.
+When doing anomaly detection with multivariate gaussian distribution, we compute $\mu$ and $\Sigma$ normally. We then compute $p(x)$ using the new formula in the previous section and flag an anomaly if $p(x) < \varepsilon$.
+The original model for $p(x)$ corresponds to a multivariate Gaussian where the contours of $p(x;\mu,\Sigma)$ are axis-aligned.
+The multivariate Gaussian model can automatically capture correlations between different features of $x$.
 
-
-When doing anomaly detection with multivariate gaussian distribution, we compute μ and Σ normally. We then compute p(x) using the new formula in the previous section and flag an anomaly if p(x) < ϵ.
-
-The original model for p(x) corresponds to a multivariate Gaussian where the contours of p(x;μ,Σ) are axis-aligned.
-
-The multivariate Gaussian model can automatically capture correlations between different features of x.
-
-However, the original model maintains some advantages: it is computationally cheaper (no matrix to invert, which is costly for large number of features) and it performs well even with small training set size (in multivariate Gaussian model, it should be greater than the number of features for Σ to be invertible).
+However, the original model maintains some advantages: it is computationally cheaper (no matrix to invert, which is costly for large number of features) and it performs well even with small training set size (in multivariate Gaussian model, it should be greater than the number of features for $\Sigma$ to be invertible).
 
 
 \section{Recommender Systems}
 
+\subsection*{Problem Formulation}
+
+Recommendation is currently a very popular application of machine learning.
+
+Say we are trying to recommend movies to customers. We can use the following definitions
+
+$n_u$ = number of users
+
+$n_m$ = number of movies
+
+$r(i,j) = 1$ if user $j$ has rated movie $i$
+
+$y(i,j)$ = rating given by user $j$ to movie $i$ (defined only if $r(i,j)=1$)
+
+\subsection*{Content Based Recommendations}
+
+We can introduce two features, $x_1$ and $x_2$ which represents how much romance or how much action a movie may have (on a scale of 0−1). One approach is that we could do linear regression for every single user. For each user $j$, learn a parameter $\theta(j)\in \mathbb{R}^3$. Predict user $j$ as rating movie $i$ with $(\theta^{(j)})^Tx^{(i)}$ stars.
+
+$\theta^{(j)}$ = parameter vector for user $j$
+
+$x^{(i)}$ = feature vector for movie $i$
+
+For user $j$, movie $i$, predicted rating: $(\theta^{(j)})^T(x^{(i)})$
+
+$m^{(j)}$ = number of movies rated by user $j$
+
+To learn $\theta^{(j)}$, we do the following
+
+$$min_{\theta^{(j)}} = \dfrac{1}{2}\displaystyle \sum_{i:r(i,j)=1} ((\theta^{(j)})^T(x^{(i)}) - y^{(i,j)})^2 + \dfrac{\lambda}{2} \sum_{k=1}^n(\theta_k^{(j)})^2$$
+
+This is our familiar linear regression. The base of the first summation is choosing all $i$ such that $r(i,j) = 1$.
+
+To get the parameters for all our users, we do the following:
+
+$$min_{\theta^{(1)},\dots,\theta^{(n_u)}} = \dfrac{1}{2}\displaystyle \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta^{(j)})^T(x^{(i)}) - y^{(i,j)})^2 + \dfrac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^n(\theta_k^{(j)})^2$$
+
+We can apply our linear regression gradient descent update using the above cost function. The only real difference is that we eliminate the constant $\dfrac{1}{m}$.
+
+\subsection*{Collaborative Filtering}
+
+It can be very difficult to find features such as "amount of romance" or "amount of action" in a movie. To figure this out, we can use feature finders.
+
+We can let the users tell us how much they like the different genres, providing their parameter vector immediately for us.
+
+To infer the features from given parameters, we use the squared error function with regularization over all the users:
+
+$$min_{x^{(1)},\dots,x^{(n_m)}} \dfrac{1}{2} \displaystyle \sum_{i=1}^{n_m} \sum_{j:r(i,j)=1} ((\theta^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \dfrac{\lambda}{2}\sum_{i=1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^2$$
+
+You can also randomly guess the values for theta to guess the features repeatedly. You will actually converge to a good set of features.
+
+To speed things up, we can simultaneously minimize our features and our parameters:
+
+$$J(x,\theta) = \dfrac{1}{2} \displaystyle \sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)} - y^{(i,j)})^2 + \dfrac{\lambda}{2}\sum_{i=1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^2 + \dfrac{\lambda}{2}\sum_{j=1}^{n_u} \sum_{k=1}^{n} (\theta_k^{(j)})^2$$
+
+It looks very complicated, but we've only combined the cost function for theta and the cost function for $x$.
+
+Because the algorithm can learn them itself, the bias units where $x_0=1$ have been removed, therefore $x\in\mathbb{ℝ}^n$ and $\theta \in\mathbb{ℝ}^n$.
+
+These are the steps in the algorithm:
+
+Initialize $x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)}$ to small random values. This serves to break symmetry and ensures that the algorithm learns features $x^{(i)},...,x^{(n_m)}$ that are different from each other.
+
+Minimize $J(x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)})$ using gradient descent (or an advanced optimization algorithm). E.g. for every $j=1,...,n_u, i=1,...n_m$:
+$$x_k^{(i)} := x_k^{(i)} - \alpha\left (\displaystyle \sum_{j:r(i,j)=1}{((\theta^{(j)})^T x^{(i)} - y^{(i,j)}) \theta_k^{(j)}} + \lambda x_k^{(i)} \right)$$
+
+​$$\theta_k^{(j)} := \theta_k^{(j)} - \alpha\left (\displaystyle \sum_{i:r(i,j)=1}{((\theta^{(j)})^T x^{(i)} - y^{(i,j)}) x_k^{(i)}} + \lambda \theta_k^{(j)} \right)$$
+​	​	
+For a user with parameters $\theta$ and a movie with (learned) features $x$, predict a star rating of $\theta^Tx$.
+
+\subsection*{Low Rank Matrix Factorization}
+
+Given matrices $X$ (each row containing features of a particular movie) and $\Theta$ (each row containing the weights for those features for a given user), then the full matrix $Y$ of all predicted ratings of all movies by all users is given simply by: $Y=X\Theta^T$.
+
+Predicting how similar two movies $i$ and $j$ are can be done using the distance between their respective feature vectors $x$. Specifically, we are looking for a small value of $\norm{x^{(i)} - x^{(j)}}$.
+
+Mean Normalization
+
+If the ranking system for movies is used from the previous lectures, then new users (who have watched no movies), will be assigned new movies incorrectly. Specifically, they will be assigned $\theta$ with all components equal to zero due to the minimization of the regularization term. That is, we assume that the new user will rank all movies 0, which does not seem intuitively correct.
+
+We rectify this problem by normalizing the data relative to the mean. First, we use a matrix $Y$ to store the data from previous ratings, where the $i$-th row of $Y$ is the ratings for the $i$-th movie and the $j$-th column corresponds to the ratings for the $j$-th user.
+
+We can now define a vector $\mu = [\mu_1, \mu_2, \dots , \mu_{n_m}]$ such that $$\mu_i = \frac{\sum_{j:r(i,j)=1}{Y_{i,j}}}{\sum_{j}{r(i,j)}}$$
+
+Which is effectively the mean of the previous ratings for the $i$-th movie (where only movies that have been watched by users are counted). We now can normalize the data by subtracting $u$, the mean rating, from the actual ratings for each user (column in matrix $Y$):
+
+As an example, consider the following matrix $Y$ and mean ratings $\mu$:
+
+$$Y =
+\begin{bmatrix}
+    5 & 5 & 0 & 0  \\
+    4 & ? & ? & 0  \\
+    0 & 0 & 5 & 4 \\
+    0 & 0 & 5 & 0 \\
+\end{bmatrix}, 
+\quad
+ \mu =
+\begin{bmatrix}
+    2.5 \newline
+    2  \newline
+    2.25 \newline
+    1.25 \newline
+\end{bmatrix}$$
+
+The resulting $Y^\prime$ vector is:
+
+$$Y' =
+\begin{bmatrix}
+  2.5    & 2.5   & -2.5 & -2.5 \\
+  2      & ?     & ?    & -2 \\
+  -.2.25 & -2.25 & 3.75 & 1.25 \\
+  -1.25  & -1.25 & 3.75 & -1.25
+\end{bmatrix}$$
+
+Now we must slightly modify the linear regression prediction to include the mean normalization term:
+
+$$(\theta^{(j)})^T x^{(i)} + \mu_i$$
+
+Now, for a new user, the initial predicted values will be equal to the $\mu$ term instead of simply being initialized to zero, which is more accurate.
 
 
 
+\chapter{Large Scale Machine Learning}
 
+We mainly benefit from a very large dataset when our algorithm has high variance when $m$ is small. Recall that if our algorithm has high bias, more data will not have any benefit.
+
+Datasets can often approach such sizes as $m = 100,000,000$. In this case, our gradient descent step will have to make a summation over all one hundred million examples. We will want to try to avoid this -- the approaches for doing so are described below.
+
+\section{Stochastic Gradient Descent}
+
+Stochastic gradient descent is an alternative to classic (or batch) gradient descent and is more efficient and scalable to large data sets.
+
+Stochastic gradient descent is written out in a different but similar way:
+
+$$cost(\theta,(x^{(i)}, y^{(i)})) = \dfrac{1}{2}(h_{\theta}(x^{(i)}) - y^{(i)})^2$$
+
+The only difference in the above cost function is the elimination of the $m$ constant within $\dfrac{1}{2}$
+
+$$J_{train}(\theta) = \dfrac{1}{m} \displaystyle \sum_{i=1}^m cost(\theta, (x^{(i)}, y^{(i)}))$$
+
+$J_{train}$ is now just the average of the cost applied to all of our training examples.
+
+The algorithm is as follows
+
+Randomly 'shuffle' the dataset 
+
+For $i = 1\dots m$
+
+$$\Theta_j := \Theta_j - \alpha (h_{\Theta}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}_j$$
+
+This algorithm will only try to fit one training example at a time. This way we can make progress in gradient descent without having to scan all m training examples first. Stochastic gradient descent will be unlikely to converge at the global minimum and will instead wander around it randomly, but usually yields a result that is close enough. Stochastic gradient descent will usually take 1-10 passes through your data set to get near the global minimum.
+
+\section{Mini-Batch Gradient Descent}
+
+Mini-batch gradient descent can sometimes be even faster than stochastic gradient descent. Instead of using all m examples as in batch gradient descent, and instead of using only 1 example as in stochastic gradient descent, we will use some in-between number of examples b.
+
+Typical values for b range from 2-100 or so.
+
+For example, with $b=10$ and $m=1000$:
+
+Repeat:
+
+For $i = 1,11,21,31,\dots,991$
+
+$$\theta_j := \theta_j - \alpha \dfrac{1}{10} \displaystyle \sum_{k=i}^{i+9} (h_\theta(x^{(k)}) - y^{(k)})x_j^{(k)}$$
+
+We're simply summing over ten examples at a time. The advantage of computing more than one example at a time is that we can use vectorized implementations over the b examples.
+
+\section{Stochastic Gradient Descent Convergence}
+
+How do we choose the learning rate $\alpha$ for stochastic gradient descent? Also, how do we debug stochastic gradient descent to make sure it is getting as close as possible to the global optimum?
+
+One strategy is to plot the average cost of the hypothesis applied to every 1000 or so training examples. We can compute and save these costs during the gradient descent iterations.
+
+With a smaller learning rate, it is possible that you may get a slightly better solution with stochastic gradient descent. That is because stochastic gradient descent will oscillate and jump around the global minimum, and it will make smaller random jumps with a smaller learning rate.
+
+If you increase the number of examples you average over to plot the performance of your algorithm, the plot's line will become smoother.
+
+With a very small number of examples for the average, the line will be too noisy and it will be difficult to find the trend.
+
+One strategy for trying to actually converge at the global minimum is to slowly decrease $\alpha$ over time. For example $\alpha = \dfrac{const1}{iterationNumber + const2}$.
+However, this is not often done because people don't want to have to fiddle with even more parameters.
+
+\section{Online Learning}
+
+With a continuous stream of users to a website, we can run an endless loop that gets $(x,y)$, where we collect some user actions for the features in $x$ to predict some behavior $y$.
+
+You can update $\theta$ for each individual $(x,y)$ pair as you collect them. This way, you can adapt to new pools of users, since you are continuously updating theta.
+
+\section{Map Reduce and Data Parallelism}
+
+We can divide up batch gradient descent and dispatch the cost function for a subset of the data to many different machines so that we can train our algorithm in parallel.
+
+You can split your training set into z subsets corresponding to the number of machines you have. On each of those machines calculate $$\displaystyle \sum_{i=p}^{q}(h_{\theta}(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)}$$
+, where we've split the data starting at $p$ and ending at $q$.
+
+MapReduce will take all these dispatched (or 'mapped') jobs and 'reduce' them by calculating:
+
+$$\Theta_j := \Theta_j - \alpha \dfrac{1}{z}(temp_j^{(1)} + temp_j^{(2)} + \cdots + temp_j^{(z)})$$
+
+For all $j = 0, \dots, n$.
+
+This is simply taking the computed cost from all the machines, calculating their average, multiplying by the learning rate, and updating theta.
+
+Your learning algorithm is MapReduceable if it can be expressed as computing sums of functions over the training set. Linear regression and logistic regression are easily parallelizable.
+
+For neural networks, you can compute forward propagation and back propagation on subsets of your data on many machines. Those machines can report their derivatives back to a 'master' server that will combine them.
 
 
 
