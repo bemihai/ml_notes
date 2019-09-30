@@ -1122,7 +1122,7 @@ To use a SVM in practice, we have to
 \end{itemize}
 \end{itemize}
 
-We can optimize $C$ and the kernel parameters using a cross-validation set. 
+We can optimize $C$ and the kernel parameters using a cross-validation set.
 
 Notice that not all the similarity functions are valid kernels (they must satisfy a technical condition for convergence called Mercer's theorem).
 
@@ -1133,21 +1133,21 @@ SVM can be used for multiclass classification with the one-vs-all method we used
 \begin{itemize}
   \item if $n$ is large (relative to $m$), use logistic regression or SVM with linear kernel (they are very similar),
   \item if $n$ is small and $m$ is intermediate, use SVM with Gaussian kernel,
-  \item if $n$ is small and $m$ is large, create more features and used linear methods. 
+  \item if $n$ is small and $m$ is large, create more features and used linear methods.
 \end{itemize}
 
-A neural network is likely to work well for all these cases, but may be slower to train. 
+A neural network is likely to work well for all these cases, but may be slower to train.
 
 
 \chapter{Unsupervised Learning}
 
-Unsupervised learning is opposite to supervised learning because it uses unlabeled data rather than labeled data. In other words, there is no vector $y$ of expected prediction, but only a dataset of features where we need to find structure. 
+Unsupervised learning is opposite to supervised learning because it uses unlabeled data rather than labeled data. In other words, there is no vector $y$ of expected prediction, but only a dataset of features where we need to find structure.
 
 \section{Clustering: K-Means Algorithm}
 
-Clustering refers to the task of grouping a set of data points in such a way that points in the same group (called cluster) are more similar, in a particular sense, to each other than to those in other groups. The k-means algorithm is the most popular and widely used algorithm for solving such a problem. 
+Clustering refers to the task of grouping a set of data points in such a way that points in the same group (called cluster) are more similar, in a particular sense, to each other than to those in other groups. The k-means algorithm is the most popular and widely used algorithm for solving such a problem.
 
-Assume that we have an unlabeled dataset $x^1, \ldots, x^m \in \mathbb{R}^n$ that we want to group in $K$ different clusters ($K < m$). 
+Assume that we have an unlabeled dataset $x^1, \ldots, x^m \in \mathbb{R}^n$ that we want to group in $K$ different clusters ($K < m$).
 
 \begin{description}
   \item[Initialization] Randomly initialize $K$ cluster centroids $\mu_1, \mu_2, \ldots, \mu_K\ \in \mathbb{R}^n$.
@@ -1155,16 +1155,16 @@ Assume that we have an unlabeled dataset $x^1, \ldots, x^m \in \mathbb{R}^n$ tha
   $$c^{(i)} := \text{argmin}_{k}{\norm{x^i - \mu_k}^2}\; ; \; i=1,\ldots,m. $$
   \item[Move centroid] Compute the averages of all the points inside each groups, then move the cluster centroid points to those averages:
   $$\mu_k := \text{average of } \{x^i \;|\; c^{(i)} = k\}\; ; \; k=1,\ldots,K.$$
-  \item[Convergence] Repeat the previous step until the centroids don't move anymore. 
+  \item[Convergence] Repeat the previous step until the centroids don't move anymore.
 \end{description}
 
 We can formally define a cost function for the K-means algorithm (also called distortion):
 $$J(c, \mu) = \dfrac{1}{m} \sum_{i=1}^{m}{\norm{x^i - \mu_{c^{(i)}}}^2},$$ where $c = (c^{(1)}, \ldots, c^{(m)})$ and $\mu = (\mu_1, \ldots, \mu_K)$.
 Then the objective of the algorithm is to minimize $J(c, \mu)$ in terms of $c$ (cluster assignment) and $\mu$ (move centroids).
 
-Remark that it is not possible for the cost function $J(c, \mu)$ to increase, it should descend at each step.   
+Remark that it is not possible for the cost function $J(c, \mu)$ to increase, it should descend at each step.
 
-K-means algorithm can get stuck in local optima of $J(c, \mu)$, depending on the initial centroids assignment. We can try many different random initializations and choose the one with the lowest distortion (it is strongly recommended to do this when $K<10$). We also need to make sure that $K < m$ and that the initial centroids are unique. 
+K-means algorithm can get stuck in local optima of $J(c, \mu)$, depending on the initial centroids assignment. We can try many different random initializations and choose the one with the lowest distortion (it is strongly recommended to do this when $K<10$). We also need to make sure that $K < m$ and that the initial centroids are unique.
 
 If there is no clue on how to choose the number of clusters, we can automatically do that by doing an elbow analysis.  The cost function should reduce as we increase the number of clusters, and then flatten out. Choose $K$ at the point where the cost function starts to flatten out. However, fairly often, the curve is very gradual, so there's no clear elbow. The cost function $J$ will always decrease as $K$ increases. The one exception is if $K$-means gets stuck at a bad local optimum.
 
@@ -1178,42 +1178,165 @@ Another way to choose $K$ is to observe how well $K$-means performs on a downstr
 
 \section{Dimensionality reduction: PCA}
 
+We may want to reduce the dimension of our features if we have a lot of redundant data. Doing dimensionality reduction will reduce the total data we have to store in computer memory and will speed up our learning algorithm.
+
+In dimensionality reduction, we are reducing the number of features rather than the number of examples. The dataset size $m$ will stay the same, but $n$, the number of features, will be reduced.
+
+Another motivation for dimensionality reduction may be data visualization. It is not easy to visualize data that is more than three dimensions. We can reduce the dimensions of our data to 3 or less in order to plot it.
+
+\subsection*{Principal component analysis}
+
+The most popular dimensionality reduction algorithm is Principal Component Analysis (PCA). For example, given two features, we want to find a single feature that effectively describes both features at once. We then map our old features onto this new feature to reduce their number from two to one. The same can be done with three features, where we map them to a 2-dimensional plane. 
+
+The goal of PCA is to reduce the feature space from $n$ dimensions to $k$ dimensions, where $k < n$. To do this, we find a $k$-dimensional space onto which to project the data in such that the (orthogonal) projection error is minimal. More precisely, we find $k$ vectors $u^1, u^2, \ldots, u^k$ and take their linear span to project onto. 
+
+Assume that we have a training set $\{x^1, x^2, \ldots, x^m\}$ of $n$-dimensional vectors. Before doing PCA, we must do some data pre-processing (feature scaling/mean normalization), since we want our features to have comparable range of values.
+
+For each feature $x_j$, define $\mu_j = \dfrac{1}{m}\ds\sum_{i=1}^{m}{x^i_j}$ and let $s_j$ be either the standard deviation or the difference between max and min. Then replace each $x_j^i$ by $x_j^i = \dfrac{x_j^i - \mu_j}{s_j}$.
+
+After the data pre-processing step, we compute the covariance matrix of the initial dataset: $$\Sigma = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i(x^i)^T}.$$
+Notice that $x^i$ is an $(n\times 1)$-dimensional vector and $(x^i)^T$ is an $(1\times n)$-dimensional vector, thus $\Sigma$ is an $(n\times n)$-dimensional matrix.
+
+Then we compute the eigenvectors $U = [u^1, u^2, \ldots, u^n]$ of $\Sigma$, which are vectors in $\mathbb{R}^n$ since $\Sigma$ is a symmetric semi-positive definite matrix. To reduce our initial $n$-dimensional feature space, we keep only the first $k$ eigenvectors $U_\text{pr} = [u^1, u^2, \ldots, u^k]$, $k<n$, called principal components. Then, for each $i=1,\ldots, m$, we define the reduced features 
+$$z^i := U_\text{pr}^T x^i \in \mathbb{R}^k.$$ 
+Once we use PCA to compress the data, we can always reconstruct back the initial features. The we get back the approximations of out initial features $$x_{\text{approx}}^i = Uz^i,$$ where $U$ is the matrix of all eigenvalues of $\Sigma$.
 
 
+There is one problem remaining, how do we choose k, the number of principal components? One way we do this in practice is to choose $k$ to be the smallest value so that 
+$$\dfrac{\frac{1}{m}\sum_{i=1}^{m}{\norm{x^i - x_{\text{approx}}^i}^2}}{\frac{1}{m}\sum_{i=1}^{m}{\norm{x^i}^2}} \leq 0.01$$
+In other words, the squared projection error divided by the total variation in data should be less than 1\%, so that 99\% of the variance is retained.
+
+The most common use of PCA is to speed up supervised learning algorithms. Given a training set with a large number of features $\{x^i\in\mathbb{R}^n, y^i\}$, we use PCA to obtain a new training set $\{z^i\in\mathbb{R}^k, y^i\}$, where $k<n$. Mapping $x^i$ onto $z^i$ should be learned only on the training set and then used on test, validation sets, etc. 
+
+It is a bad practice to use PCA for feature selection or overfitting prevention since the dimensionality reduction doesn't use the labels (use regularization instead). Do not assume that you need dimensionality reduction, just try the full algorithm first and then use dimensionality reduction to speed up the training.
 
 
+\chapter{Applied ML}
+
+\section{Anomaly detection}
+
+\subsection{Build anomaly detectors}
+
+Anomaly detection is a popular learning algorithm used in fraud detection, manufacturing, system monitoring, etc. 
+
+Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ and, for any new example $x_{test}$, we want to know whether this new example is abnormal/anomalous (e.g. fraud, manufacturing defect, system error, etc.).
+
+We define a model $p(x)$ that tells us the probability that the example is not anomalous. We also use a threshold $\varepsilon$ as a dividing line so we can say which examples are anomalous and which are not. 
+If the detector is flagging too many anomalous examples, then we need to decrease the threshold $\varepsilon$.
+
+Recall the normal (Gaussian) distribution $\mathcal{N}(\mu, \sigma^2)$ density function 
+$$p(x) = \dfrac{1}{\sigma\sqrt{2\pi}} \exp\left(-\dfrac{(x-\mu)^2}{2\sigma^2}\right).$$ 
+
+Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ that is normally distributed $\mathcal{N}(\mu, \sigma^2)$. We can estimate $\mu$ from data by taking the sample mean
+$$\mu = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i},$$
+and $\sigma^2$ by taking the sample variance
+$$\sigma^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x^i - \mu)}^2.$$
+
+To estimate the density function $p(x)$ for the training set $\{x^1, x^2,\ldots, x^m\}$, we assume that the features $x_j$ are normally distributed $\mathcal{N}(\mu_j, \sigma_j^2)$ (the features should not be necessarily independent, but the algorithm works better of they are). 
+
+We first estimate the parameters $\mu_j$ and $\sigma_j^2$ as above
+$$\mu_j = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x_j^i}  \; ; \;\;\;  \sigma_j^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x_j^i - \mu_j)}^2.$$
+
+Then we define $p(x)$ as the product of the feature densities 
+$$ p(x) := \ds\prod_{j=1}^{n}{p(x_j; \mu_j, \sigma_j^2)} = \prod_{j=1}^{n}\dfrac{1}{\sigma_j\sqrt{2\pi}} \exp\left(-\dfrac{(x_j-\mu_j)^2}{2\sigma_j^2}\right).$$
+
+Thus, whenever we have a new example $x$, we compute $p(x)$ and say that $x$ is an anomaly if $p(x) < \varepsilon$, for a small threshold $\varepsilon$. 
+
+\subsection{Evaluate anomaly detectors}
+
+To evaluate our learning algorithm, we take some labeled data, categorized into anomalous and non-anomalous examples ( y = 0 if normal, y = 1 if anomalous).
+
+Among that data, take a large proportion of good, non-anomalous data for the training set on which to train p(x).
+
+Then, take a smaller proportion of mixed anomalous and non-anomalous examples (you will usually have many more non-anomalous examples) for your cross-validation and test sets.
+
+For example, we may have a set where 0.2% of the data is anomalous. We take 60% of those examples, all of which are good (y=0) for the training set. We then take 20% of the examples for the cross-validation set (with 0.1% of the anomalous examples) and another 20% from the test set (with another 0.1% of the anomalous).
+
+In other words, we split the data 60/20/20 training/CV/test and then split the anomalous examples 50/50 between the CV and test sets.
+
+Algorithm evaluation:
+
+Fit model p(x) on training set {x(1),…,x(m)}
+On a cross validation/test example x, predict:
+
+If p(x) < ϵ (anomaly), then y=1
+
+If p(x) ≥ ϵ (normal), then y=0
+
+Possible evaluation metrics (see "Machine Learning System Design" section):
+
+True positive, false positive, false negative, true negative.
+Precision/recall
+F_1F
+1
+​	  score
+Note that we use the cross-validation set to choose parameter ϵ
+
+\subsection{Anomaly detection vs. supervised learning}
+
+When do we use anomaly detection and when do we use supervised learning?
+
+Use anomaly detection when...
+
+We have a very small number of positive examples (y=1 ... 0-20 examples is common) and a large number of negative (y=0) examples.
+We have many different "types" of anomalies and it is hard for any algorithm to learn from positive examples what the anomalies look like; future anomalies may look nothing like any of the anomalous examples we've seen so far.
+Use supervised learning when...
+
+We have a large number of both positive and negative examples. In other words, the training set is more evenly divided into classes.
+We have enough positive examples for the algorithm to get a sense of what new positives examples look like. The future positive examples are likely similar to the ones in the training set.
+
+Choosing What Features to Use
+The features will greatly affect how well your anomaly detection algorithm works.
+
+We can check that our features are gaussian by plotting a histogram of our data and checking for the bell-shaped curve.
+
+Some transforms we can try on an example feature x that does not have the bell-shaped curve are:
+
+log(x)
+log(x+1)
+log(x+c) for some constant
+\sqrt{x}
+x
+​	
+x^{1/3}x
+1/3
+
+We can play with each of these to try and achieve the gaussian shape in our data.
+
+There is an error analysis procedure for anomaly detection that is very similar to the one in supervised learning.
+
+Our goal is for p(x) to be large for normal examples and small for anomalous examples.
+
+One common problem is when p(x) is similar for both types of examples. In this case, you need to examine the anomalous examples that are giving high probability in detail and try to figure out new features that will better distinguish the data.
+
+In general, choose features that might take on unusually large or small values in the event of an anomaly.
+
+\subsection{Multivariate Gaussian Distribution}
 
 
+The multivariate gaussian distribution is an extension of anomaly detection and may (or may not) catch more anomalies.
+
+Instead of modeling p(x_1),p(x_2),\dotsp(x
+1
+​	 ),p(x
+2
+​	 ),… separately, we will model p(x) all in one go. Our parameters will be: μ∈Rn and Σ∈Rn×n
+p(x;μ,Σ)=1(2π)n/2|Σ|1/2exp(−1/2(x−μ)TΣ−1(x−μ))
+The important effect is that we can model oblong gaussian contours, allowing us to better fit data that might not fit into the normal circular contours.
+
+Varying Σ changes the shape, width, and orientation of the contours. Changing μ will move the center of the distribution.
 
 
+When doing anomaly detection with multivariate gaussian distribution, we compute μ and Σ normally. We then compute p(x) using the new formula in the previous section and flag an anomaly if p(x) < ϵ.
+
+The original model for p(x) corresponds to a multivariate Gaussian where the contours of p(x;μ,Σ) are axis-aligned.
+
+The multivariate Gaussian model can automatically capture correlations between different features of x.
+
+However, the original model maintains some advantages: it is computationally cheaper (no matrix to invert, which is costly for large number of features) and it performs well even with small training set size (in multivariate Gaussian model, it should be greater than the number of features for Σ to be invertible).
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\section{Recommender Systems}
 
 
 
