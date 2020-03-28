@@ -2,6 +2,7 @@
 \usepackage{amsmath, amsthm, amssymb, amsfonts}
 \usepackage{newlfont}
 \usepackage{color}
+%\usepackage[hypertex]{hyperref}
 \usepackage{hyperref}
 \usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
@@ -47,7 +48,7 @@ This is an older, informal definition. Tom Mitchell provides a more modern defin
 A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E.
 \end{quote}
 
-In general, any machine learning problem can be assigned to one of two broad classifications: \textbf{supervised learning}, or \textbf{unsupervised learning}.
+In general, any machine learning problem can be assigned to one of the two broad classifications: \textbf{supervised learning}, or \textbf{unsupervised learning}.
 
 \subsection*{Supervised Learning}
 
@@ -63,19 +64,25 @@ We could turn this example into a classification problem by instead making our o
 
 \textbf{Example 2}
 \begin{description}
- \item [Regression:] Given a picture of Male/Female, We have to predict his/her age on the basis of given picture.
- \item [Classification:] Given a picture of Male/Female, We have to predict Whether He/She is of High school, College, Graduate age. Another Example for Classification - Banks have to decide whether or not to give a loan to someone on the basis of his credit history.
+ \item [Regression:] Given a picture of male/female, we have to predict his/her age on the basis of given picture.
+ \item [Classification:] Given a picture of male/female, we have to predict whether he/she is of high school, college, graduate age. Another example for classification - banks have to decide whether or not to give a loan to someone on the basis of his credit history.
 \end{description}
 
 \subsection*{Unsupervised Learning}
 
-Unsupervised learning, on the other hand, allows us to approach problems with little or no idea what our results should look like. We can derive structure from data where we don't necessarily know the effect of the variables. We can derive this structure by clustering the data based on relationships among the variables in the data. With unsupervised learning there is no feedback based on the prediction results, i.e., there is no teacher to correct you.
+Unsupervised learning, on the other hand, allows us to approach problems with little or no idea what our results should look like. We can derive structure from data where we don't necessarily know the effect of the variables. We can derive this structure by clustering the data based on relationships among the variables in the data. With unsupervised learning there is no feedback based on the prediction results.
 
 \textbf{Example}
 \begin{description}
 \item[Clustering:] Take a collection of 1000 essays written on the US Economy, and find a way to automatically group these essays into a small number that are somehow similar or related by different variables, such as word frequency, sentence length, page count, and so on.
-\item[Non-clustering:] The "Cocktail Party Algorithm", which can find structure in messy data (such as the identification of individual voices and music from a mesh of sounds at a cocktail party. See \href{https://en.wikipedia.org/wiki/Cocktail_party_effect}{this link}.
+\item[Non-clustering:] The "Cocktail Party Algorithm", which can find structure in messy data such as the identification of individual voices and music from a mesh of sounds at a cocktail party. See \href{https://en.wikipedia.org/wiki/Cocktail_party_effect}{this link}.
 \end{description}
+
+\textbf{TODO:}
+\begin{itemize}
+  \item what is a machine learning problem in general ?
+  \item hypothesis, cost, optimization, performance, etc.
+\end{itemize}
 
 
 \chapter{Linear Models}
@@ -85,7 +92,7 @@ Unsupervised learning, on the other hand, allows us to approach problems with li
 \subsection*{Model representation}
 
 In regression problems, we are taking input variables and trying to fit the output onto a continuous expected result function. Linear regression with one variable is also known as "univariate linear regression."
-Univariate linear regression is used when you want to predict a single output value $y$ from a single input value $x$. We're doing supervised learning here, so that means we already have an idea about what the input/output cause and effect should be.
+Univariate linear regression is to predict a single output value $y$ from a single input value $x$. We're doing supervised learning here, so that means we already have an idea about what the input/output cause and effect should be.
 
 \subsection*{The hypothesis function}
 
@@ -94,8 +101,6 @@ Our linear hypothesis function has the general form:
 \hat{y} = h_\theta(x) = \theta_0 + \theta_1x,
 \end{equation}
 where $\hat{y} = h_\theta(x)$ is the prediction for input $x$ and $\theta_1, \theta_2$ are parameters.
-
-Note that this is like the equation of a straight line. We give to $h_\theta(x)$ values for $\theta_0$ and $\theta_1$ to get our estimated output $\hat{y}$. In other words, we are trying to create a function called $h_\theta$ that is trying to map our input data (the $x$'s) to our output data (the $y$'s).
 
 \textbf{Example}
 
@@ -112,7 +117,7 @@ Suppose we have the following set of training data:
 \end{center}
 
 Now we can make a random guess about our $h_\theta$ function: $\theta_0 = 2$ and $\theta_1 = 2$. The hypothesis function becomes $h_\theta(x) = 2 + 2x$.
-So for input of $1$ to our hypothesis, $y$ will be 4. This is off by $3$. Note that we will be trying out various values of $\theta_0$ and $\theta_1$ to try to find values which provide the best possible "fit" or the most representative "straight line" through the data points mapped on the $x$-$y$ plane.
+So for input of $1$ to our hypothesis, $y$ will be 4. This is off by $3$. Note that we try out various values of $\theta_0$ and $\theta_1$ to find values which provide the best possible "fit" or the most representative "straight line" through the data points mapped on the $x$-$y$ plane.
 
 \subsection*{Cost function}
 
@@ -124,22 +129,27 @@ This takes an average of all the results of the hypothesis with inputs from $x$'
 J(\theta_0, \theta_1) = \dfrac{1}{2m} \ds\norm{h_\theta(x) - y}_2^2  = \dfrac{1}{2m}\ds \sum_{i=1}^m \left(h_\theta(x_{i}) - y_{i}\right)^2
 \end{equation}
 
-To break it apart, it is $\frac{1}{2}$ of the mean of the squares of $h_\theta(x_{i}) - y_{i}$, or the difference between the predicted value and the actual value. The mean is halved as a convenience for the computation of the gradient descent. This function is called the "mean squared error (MSE)" and it is the most popular cost function for regression.
+To break it apart, it is half of the mean of the squares of $h_\theta(x_{i}) - y_{i}$, or the difference between the predicted value and the actual value. This function is called the "mean squared error (MSE)" and it is the most popular cost function for regression.
 
 Now we are able to concretely measure the accuracy of our predictor function against the correct results we have so that we can predict new results.
-If we try to think of it in visual terms, our training data set is scattered on the $x$-$y$ plane. We are trying to make straight line (defined by $h_\theta(x)$) which passes through this scattered set of data. Our objective is to get the best possible line. The best possible line will be such so that the average squared vertical distances of the scattered points from the line will be the least. In the best case, the line should pass through all the points of our training data set. In such a case the value of $J(\theta_0, \theta_1)$ will be 0.
+If think of it in visual terms, our training data set is scattered on the $x$-$y$ plane. We want to make straight line (defined by $h_\theta(x)$) which passes through this scattered set of data. Our objective is to get the best possible line. The best possible line will be such so that the average squared vertical distances of the scattered points from the line will be the least. In the best case, the line should pass through all the points of our training data set. In such a case the value of the cost/loss $J(\theta_0, \theta_1)$ will be 0.
 
 \subsection*{Gradient descent}
 
-So we have our hypothesis function and we have a way of measuring how well it fits into the data. Now we need to estimate the parameters in hypothesis function. That's where gradient descent comes in.
+We have our hypothesis function and we have a way of measuring how well it fits into the data. Now we need to estimate the parameters in hypothesis function. That's where gradient descent comes in.
 
-Imagine that we graph our hypothesis function based on its fields $\theta_0$ and $\theta_1$ (actually we are graphing the cost function as a function of the parameter estimates). This can be kind of confusing; we are moving up to a higher level of abstraction. We are not graphing $x$ and $y$ itself, but the parameter range of our hypothesis function and the cost resulting from selecting particular set of parameters.
+Imagine that we graph our hypothesis function based on its parameters $\theta_0$ and $\theta_1$ (actually we are graphing the cost function as a function of the parameter estimates). This can be kind of confusing; we are moving up to a higher level of abstraction. We are not graphing $x$ and $y$ itself, but the parameter range of our hypothesis function and the cost resulting from selecting particular set of parameters.
 
 We put $\theta_0$ on the $x$ axis and $\theta_1$ on the $y$ axis, with the cost function on the vertical $z$ axis. The points on our graph will be the result of the cost function using our hypothesis with those specific theta parameters.
 
-We will know that we have succeeded when our cost function is at the very bottom of the pits in our graph, i.e. when its value is the minimum.
+\textbf{TODO:}
+\begin{itemize}
+  \item add a plot with a cost function
+\end{itemize}
 
-The way we do this is by taking the derivative of our cost function. The slope of the tangent is the derivative at that point and it will give us a direction to move towards. We make steps down the cost function in the direction with the steepest descent, and the size of each step is determined by a parameter $\alpha$, which is called the learning rate.
+We know that we have succeeded when our cost function is at the very bottom of the pits in our graph, i.e. when its value is the minimum.
+
+The way we do this is by taking the derivative of the cost function. The slope of the tangent is the derivative at that point and it gives us a direction to move towards. We make steps down the cost function in the direction with the steepest descent, and the size of each step is determined by a parameter $\alpha$, which is called the learning rate.
 
 We can summarize all this discussion into the following algorithm:
 
@@ -162,8 +172,8 @@ Actually, in the case of the linear regression, the cost function $J(\theta_1, \
 
 \subsection*{Gradient descent for linear regression}
 
-When specifically applied to the case of linear regression, a new form of the gradient descent equation can be derived. We can substitute our actual cost function \eqref{eq:lin-reg-cost}
-and our actual hypothesis function \eqref{eq:lin-reg-hyp} and modify the equation \eqref{eq:lin-reg-gd} to:
+When specifically applied to the case of linear regression, a new form of the gradient descent equation can be derived. We can substitute the actual cost function \eqref{eq:lin-reg-cost}
+and the actual hypothesis function \eqref{eq:lin-reg-hyp} in equation \eqref{eq:lin-reg-gd}:
 
 \begin{equation}\label{eq:lin-reg-gdexp}
 \begin{split}
@@ -174,8 +184,6 @@ and our actual hypothesis function \eqref{eq:lin-reg-hyp} and modify the equatio
 
 where $m$ is the size of the training set and $(x_{i}, y_{i})$ are values of the given training set $(x, y)$.
 
-We have separated out the two cases for $\theta_j$ into separate equations for $\theta_0$ and $\theta_1$; and that for $\theta_1$ we are multiplying $x_{i}$ at the end due to the derivative.
-
 Note that at each update of the equations \eqref{eq:lin-reg-gdexp} we use all the training set. This is called "batch" gradient descent.
 
 
@@ -185,13 +193,15 @@ Note that at each update of the equations \eqref{eq:lin-reg-gdexp} we use all th
 Linear regression with multiple variables is also known as "multivariate linear regression".
 We start by introducing some notations that will be used throughout these notes.
 
-Assume we have a training set $\{x, y\}$, with $n \geq 2$ features and $m$ observations, where $x = (x_1, x_2, \ldots, x_n)$ represents the features (variables, predictors, etc.) and $y $ is the response variable.
+Assume we have a training set $\{x, y\}$, with $n \geq 2$ features and $m$ observations, where \newline
+$x = (x_1, x_2, \ldots, x_n)$ represents the features (variables, predictors, etc.) and $y $ is the response variable.
 
-We denote the feature matrix by $X = \{x_j^i\}\in\mathbb{R}^{m\times n}$, where $i=1,\ldots, m$ and $j=1,\ldots, n$, so that $x_j^i$ is the value of feature $j$ in the $i$-th training example.
+We denote the feature matrix by $X = \{x_j^i\}\in\mathbb{R}^{m\times n}$, where $i=1,\ldots, m$ and $j=1,\ldots, n$, so that $x_j^i$ is the value of feature $j$ in the $i$-th training example
+(training observations are on the rows and features are on the columns).
 
 We also denote by $x^{i}\in\mathbb{R}^{n\times 1}$ the column vector of all the feature inputs of the $i$-th training example and we write $y = (y^i)_{i=1}^{m}\in\mathbb{R}^{m\times 1}$.
 
-Then the multivariate hypothesis function has the following form:
+Then the multivariate linear hypothesis function has the following form:
 
 \begin{equation}\label{eq:mul-reg-hyp}
 h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \ldots + \theta_n x_n,
@@ -199,7 +209,7 @@ h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \ldots + 
 
 where $\theta_0, \theta_1, \ldots, \theta_n \in \mathbb{R}$ are parameters.
 
-Using matrix multiplication, our multivariate hypothesis function can be concisely written as:
+Using matrix multiplication, the multivariate linear hypothesis function can be concisely written as:
 
 \begin{equation}\label{eq:mul-reg-hyp-vec}
 h_\theta(x) = \theta^T x = \begin{bmatrix}\theta_0, \theta_1,\ldots, \theta_n \end{bmatrix} \cdot \begin{bmatrix}x_0 \\ x_1 \\ \vdots \\ x_n \end{bmatrix},
@@ -245,7 +255,7 @@ where $y\in \mathbb{R}^m$ denotes the response vector.
 
 \subsection*{Gradient descent for multiple variables}
 
-The gradient descent equation is generally the same as \eqref{eq:lin-reg-gdexp}, we just have to repeat it for our $n$ features:
+The gradient descent equations are generally the same as \eqref{eq:lin-reg-gdexp}, we just have to repeat it for all $n$ parameters:
 
 \verb"repeat until convergence: {"
 \begin{align*}
@@ -271,10 +281,10 @@ $$ \theta := \theta - \alpha \nabla J(\theta), $$
 where $\nabla J(\theta) \in \mathbb{R}^{n+1}$ is  the gradient of $J$, as a function of $\theta$:
 
 $$\nabla J(\theta)  = \begin{bmatrix}
-                        \dfrac{\partial J(\theta)}{\partial \theta_0}   \\\\
-                        \dfrac{\partial J(\theta)}{\partial \theta_1}   \\
+                        \dfrac{\partial}{\partial \theta_0}{J(\theta)}   \\\\
+                        \dfrac{\partial}{\partial \theta_1}{J(\theta)}   \\
                         \vdots \\
-                        \dfrac{\partial J(\theta)}{\partial \theta_n}
+                        \dfrac{\partial}{\partial \theta_n}{J(\theta)}
                       \end{bmatrix}$$
 
 The $j$-th component of the gradient is the partial derivative with respect to $\theta_j$:
@@ -298,16 +308,16 @@ Finally, the vectorized version of the gradient descent equations is:
 
 \subsection*{Feature Normalization}
 
-We can speed up gradient descent computations by having each of our input values in roughly the same range. This is because the gradient will descend quickly on small ranges and slowly on large ranges, and so will oscillate inefficiently down to the optimum when the variables are very uneven.
-The way to prevent this is to modify the ranges of our input variables so that they are all roughly the same, ideally $−1\leq x^i_j \leq 1$, for all $i$ and $j$.
+We can speed up gradient descent computations by having each of the input values in roughly the same range. This is because the gradient descends quickly on small ranges and slowly on large ranges, and so it oscillates inefficiently down to the optimum when the variables are very uneven.
+The way to prevent this is to modify the ranges of the input variables so that they are all roughly the same, ideally $−1\leq x^i_j \leq 1$, for all $i$ and $j$.
 
-Two techniques to help with this are feature scaling and mean normalization.
+There are two techniques to help with this are feature scaling and mean normalization.
 
-Feature scaling involves dividing the input values by the range (i.e. the maximum value minus the minimum value) of the input variable, resulting in a new range of just 1.
+Feature scaling involves dividing the input values by the range (i.e. the maximum value minus the minimum value) of the input variable, resulting in a new range of $[0, 1]$.
 
-Mean normalization involves subtracting the average value for an input variable from the values for that input variable, resulting in a new average value for the input variable of just zero.
+Mean normalization involves subtracting the mean value for an input variable from the values for that input variable, resulting in a new mean value for the input variable of just zero.
 
-To implement both of these techniques, adjust your input values as shown in the formula:
+To implement both of these techniques, adjust the input values as shown in the formula:
 
 $$x_j := \dfrac{x_j - \mu_j}{\sigma_j},$$
 
@@ -318,7 +328,7 @@ Note that dividing by the range, or dividing by the standard deviation, give dif
 \subsubsection*{Gradient descent tips}
 
 \begin{description}
-  \item[Debugging gradient descent.]  Make a plot with number of iterations on the $x$-axis. Now plot the cost function, $J(\theta)$ over the number of iterations of gradient descent. If $J(\theta)$ ever increases, then you probably need to decrease the learning rate $\alpha$.
+  \item[Debugging gradient descent.]  Make a plot with number of iterations on the $x$-axis. Then plot the cost function, $J(\theta)$ over the number of iterations of gradient descent. If $J(\theta)$ ever increases, then you probably need to decrease the learning rate $\alpha$.
   \item[Automatic convergence test.] Declare convergence if $J(\theta)$ decreases by less than $\varepsilon$ in one iteration, where $\varepsilon$ is some small value such as $10^{-3}$. However in practice it's difficult to choose this threshold value.
 \end{description}
 
@@ -330,12 +340,12 @@ We can improve our features and the form of our hypothesis function in a couple 
 
 We can create new features by combining multiple existing features. For example, we can combine $x_1$ and $x_2$ into a new feature $x_3$ by taking $x_3 = x_1x_2$.
 
-Our hypothesis function need not be linear if that does not fit the data well. We can change the behavior or curve of our hypothesis function by making it a quadratic, cubic or square root function (or any other form).
+The hypothesis function need not be linear if that does not fit the data well. We can change the behavior or curve of our hypothesis function by making it a quadratic, cubic or square root function (or any other form).
 
 For example, if our hypothesis function is $h_\theta(x) = \theta_0 + \theta_1 x_1$ then we can create additional features based on $x_1$, to get the quadratic function $h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_1^2$ or the cubic function $h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 x_1^2 + \theta_3 x_1^3$. In the cubic version, we have created new features $x_2$ and $x_3$ where $x_2 = x_1^2$ and $x_3 = x_1^3$.
 To make it a square root function, we could take $h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_2 \sqrt{x_1}$.
 
-One important thing to keep in mind is, if you choose your features this way then feature scaling becomes very important.
+One important thing to keep in mind is that features are chosen this way, then feature scaling becomes very important.
 
 \subsection*{Normal Equation}
 
@@ -366,12 +376,10 @@ The following table gives a comparison of gradient descent and normal equation:
 With the normal equation, computing the inverse of $X^TX$ has complexity $\mathcal{O}(n^3)$. So if we have a very large number of features, the normal equation will be slow. In practice, when $n$ exceeds $10,000$ it might be a good time to go from a normal solution to an iterative process.
 
 Notice that the matrix $X^TX$ may be non-invertible. The common causes are:
-
 \begin{itemize}
 \item redundant features, i.e. two or many features are linearly dependent,
 \item too many features (e.g. $m \leq n$).
 \end{itemize}
-
 Solutions to the above problems include deleting a feature that is linearly dependent with another or deleting one or more features when there are too many features.
 
 \break
@@ -411,7 +419,7 @@ The equation \eqref{eq:log-reg-hyp} gives $h_\theta(x)$ as the estimated probabi
   h_\theta(x) < 0.5 & \longrightarrow y = 0
 \end{align*}
 
-Since $h_\theta(x) = g(\theta^Tx)$, and looking on $g$ behaves on positive/negative numbers, we observe that $$h_\theta(x) = g(\theta^T x) \geq 0.5  \text{, if } \theta^T x \geq 0$$ and $$h_\theta(x) = g(\theta^T x) < 0.5  \text{, if } \theta^T x < 0.$$
+Since $h_\theta(x) = g(\theta^Tx)$, and looking on how $g$ behaves on positive/negative numbers, we observe that $$h_\theta(x) = g(\theta^T x) \geq 0.5  \text{, if } \theta^T x \geq 0$$ and $$h_\theta(x) = g(\theta^T x) < 0.5  \text{, if } \theta^T x < 0.$$
 
 Therefore:
 
@@ -422,7 +430,13 @@ Therefore:
 
 The line defined by $\theta^Tx = 0$ is called "decision boundary" and separates the area where $y = 0$ and where $y = 1$. Note that it depends only on the hypothesis function.
 
-In general, we can consider more complex decision boundaries (polynomial, etc.) depending on the initial hypothesis we plug into the sigmoid function. For example, if we take $z = \theta_0 + \theta_1x_1^2 +\theta_2x_2^2$, then the decision boundary $\theta_0 + \theta_1x_1^2 +\theta_2x_2^2 = 0$ is a circle.
+\textbf{TODO:}
+\begin{itemize}
+  \item add image with decision boundary
+\end{itemize}
+
+In general, we can consider more complex decision boundaries (polynomial, etc.) depending on the initial hypothesis we plug into the sigmoid function. For example, if we take \break
+$z = \theta_0 + \theta_1x_1^2 +\theta_2x_2^2$, then the decision boundary $\theta_0 + \theta_1x_1^2 +\theta_2x_2^2 = 0$ is a circle.
 
 \subsection*{Cost function}
 
@@ -441,6 +455,8 @@ $$\cost(h_\theta(x), y) = \left\{\begin{matrix}
                                   \end{matrix}\right.$$
 
 This new cost function, defined by equation \eqref{eq:log-reg-cost}, is convex so we can apply gradient descent to find the optimal $\theta$.
+
+\textbf{TODO:} log likelihood
 
 \hspace{1.0in}
 
@@ -465,13 +481,13 @@ Note that if $y = 1$ and $h_\theta(x) = 1$, then the $\cost$ will be $0$. If $y 
 
 Notice that when $y$ is equal to $1$, then the second term $(1-y)\log(1-h_\theta(x))$ will be zero and will not affect the result. If $y$ is equal to $0$, then the first term $-y \log(h_\theta(x))$ will be zero and will not affect the result.
 
-We can fully write out our entire cost function as follows:
+We can fully write out the cost function as follows:
 \begin{equation}\label{eq:log-reg-cost2}
-J(\theta) = - \frac{1}{m} \displaystyle \sum_{i=1}^m [y^{(i)}\log (h_\theta (x^{i})) + (1 - y^{i})\log (1 - h_\theta(x^{i}))],
+J(\theta) = - \frac{1}{m} \displaystyle \sum_{i=1}^m [y^{i}\log (h_\theta (x^{i})) + (1 - y^{i})\log (1 - h_\theta(x^{i}))],
 \end{equation}
 or vectorized as:
 \begin{equation}\label{eq:log-reg-cost-vec}
-J(\theta)  = \frac{1}{m} \cdot \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right),
+J(\theta)  = \frac{1}{m} \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right),
 \end{equation}
 where $h = g(X\theta)$.
 
@@ -482,49 +498,95 @@ $$\theta_j := \theta_j - \frac{\alpha}{m} \sum_{i=1}^m (h_\theta(x^{i}) - y^{i})
 
 A vectorized implementation of the gradient descent is given by: $$\theta := \theta - \frac{\alpha}{m} X^{T} (g(X \theta ) - {y}).$$
 
+\section*{Stochastic Gradient Descent}
+
+Stochastic gradient descent is an alternative to batch gradient descent (where all the training examples are used in one iteration) and is more efficient and scalable to large data sets.
+
+The cost of one training example is:
+
+$$cost(\theta,(x^{(i)}, y^{(i)})) = \dfrac{1}{2}(h_{\theta}(x^{(i)}) - y^{(i)})^2.$$
+
+The cost of the training set is:
+
+$$J_{train}(\theta) = \dfrac{1}{m} \displaystyle \sum_{i=1}^m cost(\theta, (x^{(i)}, y^{(i)})).$$
+
+First, randomly shuffle the dataset. Then for $i = 1\dots m$:
+$$\Theta_j := \Theta_j - \alpha (h_{\Theta}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}_j$$
+
+The algorithm fits one training example at a time. This way we can make progress in gradient descent without having to scan all $m$ training examples first. Stochastic gradient descent is unlikely to converge at the global minimum and will instead wander around it randomly, but usually yields a result that is close enough. Stochastic gradient descent usually takes 1-10 passes through your data (epochs) set to get near the global minimum.
+
+\section*{Mini-Batch Gradient Descent}
+
+Mini-batch gradient descent can sometimes be even faster than stochastic gradient descent. Instead of using all $m$ examples as in batch gradient descent, and instead of using only 1 example as in stochastic gradient descent, we will use some in-between number of examples $b$.
+
+Typical values for $b$ range from 2-100 or so.
+
+For example, with $b=10$ and $m=1000$:
+
+Repeat:
+
+For $i = 1,11,21,31,\dots,991$
+
+$$\theta_j := \theta_j - \alpha \dfrac{1}{10} \displaystyle \sum_{k=i}^{i+9} (h_\theta(x^{(k)}) - y^{(k)})x_j^{(k)}$$
+
+We're simply summing over ten examples at a time. The advantage of computing more than one example at a time is that we can use vectorized implementations over the b examples.
+
+\section*{Stochastic Gradient Descent Convergence}
+
+How do we choose the learning rate $\alpha$ for stochastic gradient descent? Also, how do we debug stochastic gradient descent to make sure it is getting as close as possible to the global optimum?
+
+One strategy is to plot the average cost of the hypothesis applied to every 1000 or so training examples. We can compute and save these costs during the gradient descent iterations.
+
+With a smaller learning rate, it is possible that you may get a slightly better solution with stochastic gradient descent. That is because stochastic gradient descent will oscillate and jump around the global minimum, and it will make smaller random jumps with a smaller learning rate.
+
+If you increase the number of examples you average over to plot the performance of your algorithm, the plot's line will become smoother.
+
+With a very small number of examples for the average, the line will be too noisy and it will be difficult to find the trend.
+
+One strategy for trying to actually converge at the global minimum is to slowly decrease $\alpha$ over time. However, this is not often done because people don't want to have to fiddle with even more parameters.
+
 \subsection*{Multiclass classification: one-vs-all}
 
-Assume that we have more than two classes in our classification problem, i.e. instead of having $y = \{0,1\}$, we have $y = \{0,1, \ldots, k\}$, with $k \geq 3$.
-In this case, we divide our problem into $k+1$ binary classification problems; in each one, we predict the probability that $y$ is a member of one of our classes.
+Assume that we have more than two classes in the classification problem, i.e. instead of having $y = \{0,1\}$, we have $y = \{0,1, \ldots, k\}$, with $k \geq 3$.
+In this case, we divide the problem into $k+1$ binary classification problems; in each one, we predict the probability that $y$ is a member of one of the classes.
 
 We have $k+1$ hypotheses $h_\theta^{(0)}, h_\theta^{(1)}, \ldots, h_\theta^{(k)}$, defined as:
 \begin{align*}
-h_\theta^{(0)}(x) &= P(y = 0 | x ; \theta), \\
-h_\theta^{(1)}(x) &= P(y = 1 | x ; \theta), \\
+h_\theta^{(0)}(x) &= \mathbb{P}(y = 0 | x ; \theta), \\
+h_\theta^{(1)}(x) &= \mathbb{P}(y = 1 | x ; \theta), \\
 \vdots &\\
-h_\theta^{(k)}(x) &= P(y = n | x ; \theta), \\
+h_\theta^{(k)}(x) &= \mathbb{P}(y = n | x ; \theta), \\
 \end{align*}
 and we make the final prediction by taking:
 
 $$h_\theta(x) := \max_{i\leq k} h_\theta ^{(i)}(x). \\$$
 
-We are basically choosing one class and then lumping all the others into a single second class. We do this repeatedly, applying binary logistic regression to each case, and then use the hypothesis that returned the highest value as our prediction.
+We basically choose one class and then lump all the others into a single second class. We do this repeatedly, applying binary logistic regression to each case, and then use the hypothesis that returned the highest value as our prediction.
 
 
 \section{Regularization}
 
 \subsubsection*{Overfitting/underfitting}
 
-High bias or underfitting is when the form of our hypothesis function $h$ maps poorly to the trend of the data. It is usually caused by a function that is too simple or uses too few features, e.g. if we take $h_\theta(x) = \theta_0 + \theta_1x_1 + \theta_2x_2$ then we are making an initial assumption that a linear model will fit the training data well and will be able to generalize but that may not be the case.
+High bias or underfitting is when the form of our hypothesis function $h$ maps poorly to the trend of the data. It is usually caused by a function that is too simple or uses less features, e.g. if we take 
+$h_\theta(x) = \theta_0 + \theta_1x_1 + \theta_2x_2$ then we make an initial assumption that a linear model fits the training data well and will be able to generalize but that may not be the case.
 
 At the other extreme, overfitting or high variance is caused by a hypothesis function that fits the available data but does not generalize well to predict new data. It is usually caused by a complicated function that creates a lot of unnecessary curves and angles unrelated to the data.
 
 This terminology is applied to both linear and logistic regression. There are two main options to address the issue of overfitting:
-
 \begin{itemize}
-\item Reduce the number of features:
+\item reduce the number of features:
     \begin{itemize}
       \item manually select which features to keep,
       \item use a model selection algorithm.
     \end{itemize}
 
-\item Regularization: keep all the features, but reduce the parameters $\theta_j$.
+\item regularization: keep all the features, but reduce the size of the parameters $\theta_j$.
 \end{itemize}
-
 Regularization is designed to address the problem of overfitting and works well when we have a lot of slightly useful features.
 
-If our hypothesis function overfits the data, we can reduce the weight that some of the terms in our function carry by increasing their cost. Assume we have the following hypothesis:
-$\theta_0 + \theta_1x + \theta_2x^2 + \theta_3x^3 + \theta_4x^4$ and we want to make more quadratic, i.e. we want to eliminate the influence of $\theta_3x^3$ and $\theta_4x^4$.
+If the hypothesis function overfits the data, we can reduce the weight that some of the terms in the function carry by increasing their cost. Assume we have the following hypothesis:
+$\theta_0 + \theta_1x + \theta_2x^2 + \theta_3x^3 + \theta_4x^4$ and we want to make it more quadratic, i.e. we want to eliminate the influence of $\theta_3x^3$ and $\theta_4x^4$.
 
 Instead of getting rid of these features or changing the form of the hypothesis, we can modify the cost function as such:
 
@@ -532,7 +594,7 @@ $$J(\theta) = \ds \dfrac{1}{2m}\sum_{i=1}^m (h_\theta(x^i) - y^{i})^2 + 1000\cdo
 
 We add two extra terms at the end to inflate the cost of $\theta_3$ and $\theta_4$. Now, in order for the cost function to get close to zero, we have to reduce the values of $\theta_3$ and $\theta_4$ to near zero. This will in turn greatly reduce the values of $\theta_3x^3$ and $\theta_4x^4$ in our hypothesis function.
 
-We can regularize all parameters at once and define a new cost function as:
+We can regularize all parameters at once and define a regularized cost function as:
 
 \begin{equation}\label{eq:reg-cost}
 J(\theta) = \ds \dfrac{1}{2m} \left[ \sum_{i=1}^m (h_\theta(x^{i}) - y^{i})^2 + \lambda \sum_{j=1}^n \theta_j^2 \right],
@@ -576,6 +638,12 @@ The gradient descent equations are identical to \eqref{eq:mul-reg-gdreg}:
 \end{split}
 \end{equation*}
 
+\textbf{TODO:}
+\begin{itemize}
+  \item ridge/lasso/elastic net regression
+  \item lasso regression as feature selection method
+\end{itemize}
+
 
 \chapter{Neural Networks}
 
@@ -588,7 +656,7 @@ $$g(\theta_0 + \theta_1x_1^2 + \theta_2x_1x_2 + \theta_3x_1x_3 + \theta_4x_2^2 +
 
 That gives us 6 features. If we start with 100 features and want to include all the quadratic terms, we get $5050$ resulting features.
 
-One can approximate the growth of the number of new features we get with all quadratic terms with $\mathcal{O}(\dfrac{n^2}{2})$. If we want to include all cubic terms in our hypothesis, the number of features grows asymptotically at $\mathcal{O}(n^3)$. These are very steep growths, so as the number of our features increase, the number of quadratic or cubic features increase very rapidly and becomes quickly impractical.
+One can approximate the growth of the number of new features we get with all quadratic terms with $\mathcal{O}({n^2}/{2})$. If we want to include all cubic terms in our hypothesis, the number of features grows asymptotically at $\mathcal{O}(n^3)$. These are very steep growths, so as the number of our features increase, the number of quadratic or cubic features increase very rapidly and becomes quickly impractical.
 
 For example, assume that the training set is a collection of $50 \times 50$ pixel B\&W photographs, and our goal will be to classify which ones are photos of cars. Our feature set size is then $n = 2500$ if we compare every pair of pixels. Now let's say we consider a quadratic hypothesis function. In this case, the total number of features will be about $2500^2 / 2 = 3125000$, which is very impractical.
 
@@ -623,6 +691,8 @@ As before, we add an extra input node $x_0 = 1$, which is called "bias unit". Th
 To get the actual output $h_\theta(x)$ we apply the logistic (or sigmoid) function $g(z) = \dfrac{1}{1+\mathrm{e}^{-z}}$ to the node $z$ ($g$ is called the "activation function" of the node $z$), hence:
 $$ h_\theta(x) = g(\theta^Tx) = \dfrac{1}{1 + \mathrm{e}^{-\theta^Tx}}.$$
 
+One can use other functions with similar properties as activation functions.
+
 The first layer is called the "input layer" and the final layer the "output layer," which gives the final value computed by the hypothesis. We can have intermediate layers of nodes between input and output, called "hidden layers." The nodes of a hidden layer are also called "activation units".
 
 \begin{center}
@@ -649,11 +719,10 @@ The values of the activation units $a^j_i$ are computed as follows:
 
 \begin{equation}\label{eq:nn-act-nod}
 \begin{split}
-a_1^{1} = & g(\Theta_{10}^{1}x_0 + \Theta_{11}^{1}x_1 + \Theta_{12}^{1}x_2 + \Theta_{13}^{1}x_3), \\
-a_2^{1} = & g(\Theta_{20}^{1}x_0 + \Theta_{21}^{1}x_1 + \Theta_{22}^{1}x_2 + \Theta_{23}^{1}x_3), \\
-a_3^{1} = & g(\Theta_{30}^{1}x_0 + \Theta_{31}^{1}x_1 + \Theta_{32}^{1}x_2 + \Theta_{33}^{1}x_3), \\
-& \\
-h_\Theta(x) =  a_1^{2} = & g(\Theta_{10}^{2}a_0^{1} + \Theta_{11}^{2}a_1^{1} + \Theta_{12}^{2}a_2^{1} + \Theta_{13}^{2}a_3^{1}). \\
+a_1^{1} = & g(\theta_{10}^{1}x_0 + \theta_{11}^{1}x_1 + \theta_{12}^{1}x_2 + \theta_{13}^{1}x_3), \\
+a_2^{1} = & g(\theta_{20}^{1}x_0 + \theta_{21}^{1}x_1 + \theta_{22}^{1}x_2 + \theta_{23}^{1}x_3), \\
+a_3^{1} = & g(\theta_{30}^{1}x_0 + \theta_{31}^{1}x_1 + \theta_{32}^{1}x_2 + \theta_{33}^{1}x_3), \\
+h_\theta(x) =  a_1^{2} = & g(\theta_{10}^{2}a_0^{1} + \theta_{11}^{2}a_1^{1} + \theta_{12}^{2}a_2^{1} + \theta_{13}^{2}a_3^{1}). \\
 \end{split}
 \end{equation}
 
@@ -672,17 +741,16 @@ Since we have $s_{j-1}$ units in layer $j-1$ and $s_{j}$ units in layer $j$, the
 \subsection*{Vectorized representation}
 
 In this section we describe a vectorized implementation of the forward propagations equations.
-
-We denote by $z^j_i$ the inputs of function $g$ in equations \eqref{eq:nn-act-nod}. More precisely:
+Assume we have $n$ input nodes and one hidden layer as the network in the previous figure. We denote by $z^j_i$ the inputs of function $g$ in equations \eqref{eq:nn-act-nod}. More precisely:
 
 \begin{equation}\label{eq:nn-def-z's}
 \begin{split}
-z_i^{1} = & \; \Theta_{i0}^{j}x_0 + \Theta_{i1}^{1}x_1 + \cdots + \Theta_{in}^{1}x_n,\; i=1,2,3, \\
-z_1^{2} = & \; \Theta_{10}^{2}a_0^{1} + \Theta_{11}^{2}a_1^{1} + \Theta_{12}^{2}a_2^{1} + \Theta_{13}^{2}a_3^{1}. \\
+z_i^{1} = & \; \theta_{i0}^{j}x_0 + \theta_{i1}^{1}x_1 + \cdots + \theta_{in}^{1}x_n,\; i=1,\ldots,n, \\
+z_1^{2} = & \; \theta_{10}^{2}a_0^{1} + \theta_{11}^{2}a_1^{1} + \theta_{12}^{2}a_2^{1} + \theta_{13}^{2}a_3^{1}. \\
 \end{split}
 \end{equation}
 
-Considering vectors $x = [x_0, x_1, \ldots, x_n]^T$ and $z^j = [z^j_1, z^j_2, \ldots, z^j_n]^T$  and $x = a^0$, we can write: $$z^{j} = \Theta^{j} \cdot a^{j-1}, \; \text{ for each layer } j.$$
+Considering vectors $x = [x_0, x_1, \ldots, x_n]^T$ and $z^j = [z^j_1, z^j_2, \ldots, z^{j}_{s_j}]^T$  and $x = a^0$, we can write: $$z^{j} = \Theta^{j} \cdot a^{j-1}, \; \text{ for each layer } j.$$
 
 Recall that the matrix $\Theta^j$ has dimension $s_{j}\times (s_{j-1}+1)$, where $s_j$ is the number of activation nodes in layer $j$. The vector $a^{j-1}$ has $s_{j-1}+1$ elements, so the resulting vector $z^{j}$ has $s_j$ elements.
 
@@ -697,26 +765,26 @@ Finally: $$h_\Theta(x) = a^{j+1} = g(z^{j+1}).$$
 
 A simple example of applying neural networks is by predicting the output of a logical operator \verb"AND" which returns \verb"TRUE" if and only if both arguments are \verb"TRUE".
 
-We use simple network with no hidden layers:
+We use a simple network with no hidden layers:
 
 \begin{center}
 \begin{neuralnetwork}[height=4]
     \newcommand{\x}[2]{$x_#2$}
-    \newcommand{\h}[2]{$h_\Theta(x)$}
+    \newcommand{\h}[2]{$h_\theta(x)$}
     \inputlayer[count=2, bias=true, text=\x]
     \outputlayer[count=1, text=\h]
-    \linklayers[title=$\Theta^1$]
+    \linklayers[title=$\theta^1$]
 \end{neuralnetwork}
 \end{center}
 
-Remember that $x_0$ is the bias input and is always equal to 1. Setting $$\Theta^1 := [−30, 20, 20],$$ we have: $$h_\Theta(x) = g(-30 + 20x_1 + 20x_2).$$
+Remember that $x_0$ is the bias input and is always equal to 1. Setting $$\theta^1 := [−30, 20, 20],$$ we have: $$h_\Theta(x) = g(-30 + 20x_1 + 20x_2).$$
 
 More explicitly, we get the following cases:
 \begin{align*}
-x_1 = 0 \text{ and } x_2 = 0  \longrightarrow h_\Theta(x) = &\; g(-30) \sim 0 \\
-x_1 = 0 \text{ and } x_2 = 1  \longrightarrow h_\Theta(x) = &\; g(-10) \sim 0 \\
-x_1 = 1 \text{ and } x_2 = 0  \longrightarrow h_\Theta(x) = &\; g(-10) \sim 0 \\
-x_1 = 1 \text{ and } x_2 = 1  \longrightarrow h_\Theta(x) = &\;\;\;\; g(10)  \sim 1 \\
+x_1 = 0 \text{ and } x_2 = 0  \longrightarrow h_\theta(x) = &\; g(-30) \sim 0 \\
+x_1 = 0 \text{ and } x_2 = 1  \longrightarrow h_\theta(x) = &\; g(-10) \sim 0 \\
+x_1 = 1 \text{ and } x_2 = 0  \longrightarrow h_\theta(x) = &\; g(-10) \sim 0 \\
+x_1 = 1 \text{ and } x_2 = 1  \longrightarrow h_\theta(x) = &\;\;\;\; g(10)  \sim 1 \\
 \end{align*}
 So we have built one of the fundamental operations in computers by using a small neural network rather than using an actual \verb"AND" gate.
 
@@ -729,16 +797,16 @@ We can combine these to get the \verb"XNOR" logical operator, which returns 1 if
 \begin{neuralnetwork}[height=4]
     \newcommand{\x}[2]{$x_#2$}
     \newcommand{\au}[2]{$a^{#1}_#2$}
-    \newcommand{\h}[2]{$h_\Theta(x)$}
+    \newcommand{\h}[2]{$h_\theta(x)$}
     \inputlayer[count=2, bias=true,text=\x]
-    \hiddenlayer[count=2, bias=false, text=\au]
-    \linklayers[title=$\Theta^1$]
+    \hiddenlayer[count=2, bias=true, text=\au]
+    \linklayers[title=$\theta^1$]
     \outputlayer[count=1, text=\h]
-    \linklayers[title=$\Theta^2$]
+    \linklayers[title=$\theta^2$]
 \end{neuralnetwork}
 \end{center}
 
-To map the input layer to the hidden layer, we use a $\Theta^1$ matrix that combines the values for \verb"AND" and \verb"NOR":
+To map the input layer to the hidden layer, we use a $\theta^1$ matrix that combines the values for \verb"AND" and \verb"NOR":
 $$\Theta^{(1)} =\begin{bmatrix}-30 & 20 & 20 \\ 10 & -20 & -20\end{bmatrix}.$$
 
 To map the hidden layer to the output layer, we use the $\Theta^2$ matrix of \verb"OR": $$\Theta^{(2)} =\begin{bmatrix}-10 & 20 & 20\end{bmatrix}.$$
@@ -765,14 +833,16 @@ To classify a set of data into multiple classes, we allow our hypothesis functio
 \captionof*{figure}{Network with many hidden layer}
 \end{center}
 
-The final hidden layer, when multiplied by its $\Theta$ matrix, will map to a vector on which we apply the sigmoid function $g$ to get the final vector of hypothesis values.
+The final hidden layer, when multiplied by its $\theta$ matrix, will map to a vector on which we apply the sigmoid function $g$ or other activation function to get the final vector of hypothesis values.
 
 
 \section{Neural networks learning}
 
+\textbf{TODO:} fix convention for weights matrix $\theta$ or $\Theta$ + better notations.
+
 \subsection*{Cost function}
 
-Remember from the previous section that, for a neural network, we denote by $L$ total number of layers in the network, by $s_j$ the number of units (not counting the bias unit) in layer $j$ and by $K \geq 1$ the number of output units/classes. We denote by $h\Theta(x)_k$ the hypothesis that results in the $k$-th output.
+Remember from the previous section that, for a neural network, we denote by $L$ total number of layers in the network, by $s_j$ the number of units (not counting the bias unit) in layer $j$ and by $K \geq 1$ the number of output units/classes. We denote by $h_\theta(x)_k$ the hypothesis that results in the $k$-th output.
 
 We have seen in the previous section that a neural network looks locally like a logistic regression. The cost function we use for training neural networks is going to be a generalization of the cost function for logistic regression. Recall from \eqref{eq:log-reg-costreg} the cost function for regularized logistic regression:
 $$ J(\theta) = - \dfrac{1}{m} \sum_{i=1}^m \large[ y^{i}\ \log (h_\theta (x^{i})) + (1 - y^{i})\ \log (1 - h_\theta(x^{i}))\large] + \frac{\lambda}{2m}\sum_{j=1}^n \theta_j^2.$$
@@ -793,7 +863,7 @@ The regularization term includes all the weights that appear along the network. 
 
 \subsection*{The backpropagation algorithm}
 
-The backpropagation algorithm is a method of computing the partial derivatives of the cost function of a neural network, to use further in gradient descent. Our goal is to find an optimal set of weights $\Theta$ that minimize the cost function $J$ from \eqref{eq:nn-cost}.
+The backpropagation algorithm is a method of computing the partial derivatives of the cost function of a neural network, to use further in gradient descent. Our goal is to find an optimal set of weights $\Theta$ that minimizes the cost function $J$ from \eqref{eq:nn-cost}.
 
 Recall that for gradient descent we have to compute the partial derivatives $\dfrac{\partial}{\partial\Theta^l_{ji}}J(\Theta)$ and update the parameters accordingly at each iteration.
 
@@ -802,28 +872,27 @@ In the case of backpropagation, we compute the "error" $\delta_j^{l}$ of every n
 For the output layer, we have that: $$\delta^{L} = a^{L} - y,$$
 where $L$ is the number of layers and $a^{L}$ is the vector of outputs of the activation units of the last layer. So the "error" values for the output layer are simply the differences of the nodes in the output layer and the correct values in $y$.
 
-To get the errors of the layers before the output layer, we use an equation that steps us back from right to left: $$\delta^{l} = (\Theta^{l})^T \delta^{l+1}\ .*\ g^\prime(z^{l}),$$
+To get the errors of the layers before the output layer, we use an equation that steps us back from right to left: 
+$$\delta^{l} = (\Theta^{l+1})^T \delta^{l+1}\ .*\ g^\prime(z^{l}),$$
 where $z^l$ is defined by \eqref{eq:nn-def-z's} and $g^\prime$ is the derivative of $g$.
 The errors of layer $l$ are calculated by multiplying the errors in the next layer with the matrix of weights of layer $l$. We then multiply this element-wise ($.*$) with the derivative of the activation function $g$ evaluated in $z^l$.
 
 One can prove that the derivative of $g$ can be written as $g^\prime(u) = g(u)\ .*\ (1 - g(u))$. Then the backpropagation equation for nodes in layer $l$ becomes:
 
 \begin{equation}\label{eq:nn-bkprp-eq}
-\delta^{l} = (\Theta^{l})^T \delta^{l+1}\ .*\ a^{l}\ .*\ (1 - a^{l}).
+\delta^{l} = (\Theta^{l+1})^T \delta^{l+1}\ .*\ a^{l}\ .*\ (1 - a^{l})\in \mathbb{R}^{s_l+1}.
 \end{equation}
 
 Ignoring regularization, one can prove that the partial derivatives of the cost function $J$ are given by:
 \begin{equation}\label{eq:nn-cost-deriv}
-\dfrac{\partial J(\Theta)}{\partial \Theta_{ij}^{l}} = \dfrac{1}{m}\sum_{t=1}^m a_j^{t,l} {\delta}_i^{t,l+1}.
+\dfrac{\partial}{\partial \Theta_{ij}^{l}}{J(\Theta)} = \dfrac{1}{m}\sum_{t=1}^m (a^t)_j^{l-1} (\delta^t)_i^{l}.
 \end{equation}
 
 Notice that $\delta^{l+1}$  and $a^{l+1}$ are vectors with $s_{l+1}$ elements. Similarly, $a^{l}$ is a vector with $s_l$ elements. Multiplying them produces a matrix that is $s_{l+1}$ by $s_l$ which is the same dimension as $\Theta^l$. That is, the process produces a gradient term for every element in $\Theta^l$.
 
-TODO: check correct dimensions!
-
 We can now take all these equations and put them together into an algorithm.
 
-\subsubsection*{The backpropagation algorithm}
+\subsubsection*{The backpropagation algorithm (to compute the partial derivatives of $J(\Theta)$)}
 
 Assume we have a training set ${(x^1,y^1), \ldots, (x^m,y^m)}$, with $m$ observations.
 \begin{description}
@@ -832,19 +901,21 @@ Assume we have a training set ${(x^1,y^1), \ldots, (x^m,y^m)}$, with $m$ observa
 \item[Step 2] {For each training example $t$:
 
 \begin{itemize}
-\item set $a^{1} := x^{t}$,
+\item set $a^{0} := x^{t}$,
 \item do forward propagation to compute $a^{l}$, for $l=2,3,\ldots,L$,
 \item using $y^{t}$, compute $\delta^{L} = a^{L} - y^{t}$,
 \item compute $\delta^{L-1}, \delta^{L-2},\ldots, \delta^{2}$, using the backpropagation equation \eqref{eq:nn-bkprp-eq},
-\item update $\Delta^{l}_{ij} := \Delta^{l}_{ij} + a_j^{l} \delta_i^{l+1}$.
+\item update $\Delta^{l}_{ij} := \Delta^{l}_{ij} + a_j^{l-1} \delta_i^{l}$.
 \end{itemize}
 }
-\item[Step 3]{Compute $D^l_{ij} := \dfrac{1}{m}\left(\Delta^l_{ij} + \lambda\Theta^l_{ij} \right)$, if $j\neq 0$, and $D^{l}_{ij} := \dfrac{1}{m}\Delta^{l}_{ij}$, if $j = 0$.}
+\item[Step 3]{Compute $D^l_{ij} := \dfrac{1}{m}\left(\Delta^l_{ij} + \lambda\theta^l_{ij} \right)$, if $j\neq 0$, and $D^{l}_{ij} := \dfrac{1}{m}\Delta^{l}_{ij}$, if $j = 0$.}
 
-\item[Step 4]{Compute $\dfrac{\partial}{\partial\Theta^l_{ji}}J(\Theta) = D^l_{ij}$, for all indices $l, i, j$.}
+\item[Step 4]{Compute $\dfrac{\partial}{\partial\theta^l_{ji}}J(\theta) = D^l_{ij}$, for all indices $l, i, j$.}
 \end{description}
 
 Now we have all necessary ingredients to train a neural network.
+
+\textbf{TODO:} vectorized implementation of gradient descent ?
 
 \subsection*{Training a neural network}
 
@@ -898,26 +969,26 @@ This formula gives us the proportion of the test data that was misclassified.
 
 Just because a learning algorithm fits a training set well, that does not mean it is a good hypothesis. The error of a hypothesis as measured on the dataset used to learn the parameters will be lower than on any other dataset.
 
-For example, assume that we have a hypothesis $h_\theta(x)$ which is a polynomial of degree $d$. We can split the initial dataset into training/testing sets and do the following:
+For example, assume that we have a hypothesis $h_\theta$ which is a polynomial of degree $d$. We can split the initial dataset into training/testing sets and do the following:
 \begin{itemize}
   \item optimize $\theta$ on the training set, for each value of $d$,
   \item find the degree $d$ giving the lowest error on the test set,
-  \item estimate the generalization error of $h_{\theta, d}$ on the test set.
+  \item estimate the generalization error of $h^d_{\theta}$ on the test set.
 \end{itemize}
-This is a bad method because we learn $d$, the degree of the polynomial hypothesis, using the test set and this will cause our error to be greater for any other set of new data.
+This is a bad method because we learn $d$, the degree of the polynomial hypothesis, using the test set and this will cause the error to be greater for any other set of new data.
 
 To solve this issue, we use an intermediate set to learn $d$, called "cross-validation" set. Typically, we split the initial training set into three parts:
 \begin{enumerate}
-  \item Training set: $\sim 60\%$ of the data, used to learn several hypotheses $h_\theta(x)$,
+  \item Training set: $\sim 60\%$ of the data, used to learn several hypotheses $h_\theta$,
   \item Cross-validation set: $\sim 20\%$ of the data, used to test all hypothesis learned and choose the best one,
   \item Testing set: $\sim 20\%$ of the data, used to estimate the generalization error.
 \end{enumerate}
 
 \section{Bias vs. Variance}
 
-Most of the time, our models will suffer of one of the following problems:
+Most of the time, our models will suffer of one of the following problems (see the figure below):
 \begin{description}
-  \item[High bias/Underfitting:] the model/hypothesis is too simple to fit the data, and both training and cross-validation error are high
+  \item[High bias/Underfitting:] the model/hypothesis is too simple to fit the data, and both training and cross-validation error are very high,
   \item[High variance/Overfitting:] the model/hypothesis is too complex, the training error is small and the cross-validation error is large.
 \end{description}
 
@@ -926,6 +997,8 @@ Most of the time, our models will suffer of one of the following problems:
 \end{center}
 
 If we use a regularized cost function, then choosing a very large parameter $\lambda$ may cause high bias and choosing a very small $\lambda$ may cause high variance. To find the optimal $\lambda$ we use the cross-validation set.
+
+\textbf{TODO:} short explanation of bias-variance trade-off. 
 
 \begin{center}
 \includegraphics[height = 2in]{Images/bias_variance_lambda}
@@ -938,7 +1011,7 @@ Training only 3 examples will easily have 0 errors because we can always find a 
 \includegraphics[height = 2in]{Images/learn_curve}
 \end{center}
 
-If the algorithm suffers from high bias, then:
+If the algorithm suffers from high bias (underfitting), then:
 \begin{itemize}
   \item low training set size causes the training error $J_\textrm{train}(\theta)$ to be low and the cross-validation error $J_\textrm{cv}(\theta)$ to be high,
   \item large training set size causes both $J_\textrm{train}(\theta)$ and $J_\textrm{cv}(\theta)$ to be high and very close to each other.
@@ -948,7 +1021,7 @@ If the algorithm suffers from high bias, then:
 \includegraphics[height = 2in]{Images/learn_curve_bias}
 \end{center}
 
-If the algorithm suffers from high variance, then:
+If the algorithm suffers from high variance (overfitting), then:
 \begin{itemize}
 \item low training set size causes low $J_\textrm{train}(\theta)$ and high $J_\textrm{cv}(\theta)$,
 \item large training set size makes $J_\textrm{train}(\theta)$ increasing with training set size and $J_\textrm{cv}(\theta)$ decreasing without leveling off (also, $J_\textrm{train}(\theta) < J_\textrm{cv}(\theta)$, but the difference between them remains significant).
@@ -975,7 +1048,7 @@ In conclusion, when running model diagnostics we should keep in mind the followi
 Usually, we start with a simple algorithm, easy to implement, and test it on cross-validation data (quick dirty model). Then we can plot learning curves to decide what comes next: more data, more features, etc. Finally, we do error analysis, i.e. we analyze cross-validation errors to see if anything systematic can be spotted.
 
 
-\section{Error metrics for skewed classes}
+\section{Error metrics}
 
 It is sometimes difficult to tell whether a reduction in error is actually an improvement of the algorithm. For example, in predicting a cancer diagnoses where only $0.5\%$ of the examples have cancer, we find a learning algorithm that has a $1\%$ error. However, if we were to simply classify every single example as a 0, then our error would reduce to $0.5\%$ even though we did not improve the algorithm.
 This usually happens with skewed classes; that is, when we have a lot more examples from one class than from the other class.
@@ -995,12 +1068,12 @@ The accuracy of the classifier is defined as:
 
 With skewed classes, the accuracy might not be the best metric for deciding the goodness of the classifier, so we also define the precision/recall as:
 \begin{equation}\label{df:precision}
-\textrm{Precision} = \dfrac{\textrm{True positive}}{\textrm{True positive + False positive}} = \dfrac{\textrm{True positive}}{\textrm{Total predicted positive}}
+\textrm{Precision} = \dfrac{\textrm{True positive}}{\textrm{True positive + False positive}} = \dfrac{\textrm{True positive}}{\textrm{Total predicted positive}},
 \end{equation}
 i.e. from all predictions with $y=1$, what fraction actually has $y=1$?
 
 \begin{equation}\label{df:recall}
-\textrm{Recall} = \dfrac{\textrm{True positive}}{\textrm{True positive + False negative}} = \dfrac{\textrm{True positive}}{\textrm{Total actual positive}}
+\textrm{Recall} = \dfrac{\textrm{True positive}}{\textrm{True positive + False negative}} = \dfrac{\textrm{True positive}}{\textrm{Total actual positive}},
 \end{equation}
 i.e. from all examples with $y=1$, what fraction is correctly predicted?
 
@@ -1016,13 +1089,13 @@ If we want to increase the precision (avoid false positives) then one way to do 
 
 \chapter{Support vector machines}
 
-\section{Optimization objective}
+\section{SVM with linear kernel}
 
 We describe the optimization objective of a support vector machine (SVM) starting from logistic regression.
 
 Recall that for logistic regression, the hypothesis defined by \ref{eq:log-reg-hyp} is
 $$h_\theta(x) = \dfrac{1}{1 + \mathrm{e}^{-\theta^Tx}},$$
-and the cost function (i.e. the optimization objective) defined by \ref{eq:log-reg-cost} is
+and the cost function (optimization objective) defined by \ref{eq:log-reg-cost} is
 $$\text{cost}(z) = -y\cdot\log\left(\dfrac{1}{1 + \mathrm{e}^{-z}}\right) - (1-y)\cdot\log\left(1-\dfrac{1}{1 + \mathrm{e}^{-z}}\right),$$
 where $z = \theta^Tx$.
 
@@ -1073,7 +1146,7 @@ With these changes, the hypothesis $h_\theta$ of the SVM becomes a discriminant 
 In SVM, the decision boundary has the special property that it is as far away as possible from both the positive and the negative examples. The distance from the decision boundary to the nearest example is called the margin. Since SVM maximizes this margin, it is often described as a large margin classifier. Notice that a large margin is only achieved when the regularization constant $C$ is very large. Thus, if we have outliers that can affect the decision boundary, we can reduce $C$.
 
 
-\section{SVM with kernel}
+\section{SVM with non-linear kernel}
 
 Kernels allow us to make complex, non-linear classifiers using SVM.
 
@@ -1098,7 +1171,7 @@ We can choose the landmarks to be exactly the training examples. Given a trainin
 
 Each training example $(x^i, y^j)$ defines a vector of features $f^i = [f^i_0, f^i_1, \ldots, f^i_m]^T \in \mathbb{R}^{m+1}$, where $f^i_0 = 1$ and $f^i_j$ is the similarity between $x^i$ and $l^j$.
 
-Then, given a new impute $x$ we compute the corresponding feature vector $f\in\mathbb{R}^{m+1}$ and predict $y=1$ if $\theta^Tf \ge 0$  and $y=0$ if $\theta^Tf < 0$, where the parameters vector $\theta$ minimizes the following SVM cost function:
+Then, given a new input $x$ we compute the corresponding feature vector $f\in\mathbb{R}^{m+1}$ and predict $y=1$ if $\theta^Tf \ge 0$  and $y=0$ if $\theta^Tf < 0$, where the parameters vector $\theta$ minimizes the following SVM cost function:
 $$ J(\theta) = C\sum_{i=1}^m \left[y^{i}\text{cost}_1(\theta^Tf^{i}) + (1 - y^{i})\text{cost}_0(\theta^Tf^{i})\right] + \dfrac{1}{2}\sum_{j=1}^n \theta^2_j.$$
 
 A very large value of $C$ implies overfitting (low bias, high variance), while a very small value of $C$ implies underfitting (high bias, low variance).
@@ -1108,14 +1181,14 @@ Using kernels to generate features is not exclusive to SVM and may also be appli
 
 \subsubsection*{How to use a SVM}
 
-To use a SVM in practice, we have to
+To use a SVM in practice, we have to choose
 \begin{itemize}
-\item choose the regularization parameter $C=\dfrac{1}{\lambda}$:
+\item the regularization parameter $C={1}/{\lambda}$:
 \begin{itemize}
   \item if $C$ is large, then we have higher variance/lower bias,
   \item If $C$ is small, then we have lower variance/higher bias,
 \end{itemize}
-\item choose the kernel (similarity function)
+\item the kernel (similarity function)
 \begin{itemize}
 \item no kernel (or linear kernel) - gives a standard linear classifier, works well when $n$ is large and when $m$ is small,
 \item Gaussian Kernel - needs feature scaling and a choice of $\sigma^2$, works well when $n$ is small and $m$ is large.
@@ -1131,7 +1204,7 @@ SVM can be used for multiclass classification with the one-vs-all method we used
 \subsubsection*{Logistic regression vs. SVM}
 
 \begin{itemize}
-  \item if $n$ is large (relative to $m$), use logistic regression or SVM with linear kernel (they are very similar),
+  \item if the number of features $n$ is large (relative to the number of training examples $m$), use logistic regression or SVM with linear kernel (they are very similar),
   \item if $n$ is small and $m$ is intermediate, use SVM with Gaussian kernel,
   \item if $n$ is small and $m$ is large, create more features and used linear methods.
 \end{itemize}
@@ -1149,13 +1222,15 @@ Clustering refers to the task of grouping a set of data points in such a way tha
 
 Assume that we have an unlabeled dataset $x^1, \ldots, x^m \in \mathbb{R}^n$ that we want to group in $K$ different clusters ($K < m$).
 
+\subsubsection*{The steps of k-means}
+
 \begin{description}
-  \item[Initialization] Randomly initialize $K$ cluster centroids $\mu_1, \mu_2, \ldots, \mu_K\ \in \mathbb{R}^n$.
-  \item[Cluster assignment] Assign all examples into one of the groups based on which centroid the example is closest to and record the cluster index:
+  \item[Initialization] Randomly initialize $K$ points, called cluster centroids, $\mu_1, \mu_2, \ldots, \mu_K\ \in \mathbb{R}^n$.
+  \item[Clusters assignment] Assign all training examples into one of the groups based on which centroid the example is closest to and record the cluster index:
   $$c^{(i)} := \text{argmin}_{k}{\norm{x^i - \mu_k}^2}\; ; \; i=1,\ldots,m. $$
-  \item[Move centroid] Compute the averages of all the points inside each groups, then move the cluster centroid points to those averages:
+  \item[Move centroids] Compute the averages of all the points inside each cluster, then move the cluster centroid points to those averages:
   $$\mu_k := \text{average of } \{x^i \;|\; c^{(i)} = k\}\; ; \; k=1,\ldots,K.$$
-  \item[Convergence] Repeat the previous step until the centroids don't move anymore.
+  \item[Convergence] Repeat the previous step until the centroids do not move anymore.
 \end{description}
 
 We can formally define a cost function for the K-means algorithm (also called distortion):
@@ -1166,7 +1241,7 @@ Remark that it is not possible for the cost function $J(c, \mu)$ to increase, it
 
 K-means algorithm can get stuck in local optima of $J(c, \mu)$, depending on the initial centroids assignment. We can try many different random initializations and choose the one with the lowest distortion (it is strongly recommended to do this when $K<10$). We also need to make sure that $K < m$ and that the initial centroids are unique.
 
-If there is no clue on how to choose the number of clusters, we can automatically do that by doing an elbow analysis.  The cost function should reduce as we increase the number of clusters, and then flatten out. Choose $K$ at the point where the cost function starts to flatten out. However, fairly often, the curve is very gradual, so there's no clear elbow. The cost function $J$ will always decrease as $K$ increases. The one exception is if $K$-means gets stuck at a bad local optimum.
+If there is no clue on how to choose the number of clusters, we can automatically do that by doing an elbow analysis.  The cost function should decrease as we increase the number of clusters, and then flatten out. Choose $K$ at the point where the cost function starts to flatten out. However, fairly often, the curve is very gradual, so there's no clear elbow. The cost function $J$ will always decrease as $K$ increases. The one exception is if $K$-means gets stuck at a bad local optimum.
 
 \hspace{1.0in}
 \begin{center}
@@ -1178,7 +1253,7 @@ Another way to choose $K$ is to observe how well $K$-means performs on a downstr
 
 \section{Dimensionality reduction: PCA}
 
-We may want to reduce the dimension of our features if we have a lot of redundant data. Doing dimensionality reduction will reduce the total data we have to store in computer memory and will speed up our learning algorithm.
+We may want to reduce the dimension of the features if we have a lot of redundant data. Doing dimensionality reduction will reduce the total data we have to store in memory and will speed up the learning algorithm.
 
 In dimensionality reduction, we are reducing the number of features rather than the number of examples. The dataset size $m$ will stay the same, but $n$, the number of features, will be reduced.
 
@@ -1188,18 +1263,18 @@ Another motivation for dimensionality reduction may be data visualization. It is
 
 The most popular dimensionality reduction algorithm is Principal Component Analysis (PCA). For example, given two features, we want to find a single feature that effectively describes both features at once. We then map our old features onto this new feature to reduce their number from two to one. The same can be done with three features, where we map them to a 2-dimensional plane.
 
-The goal of PCA is to reduce the feature space from $n$ dimensions to $k$ dimensions, where $k < n$. To do this, we find a $k$-dimensional space onto which to project the data in such that the (orthogonal) projection error is minimal. More precisely, we find $k$ vectors $u^1, u^2, \ldots, u^k$ and take their linear span to project onto.
+The goal of PCA is to reduce the feature space from $n$ dimensions to $k$ dimensions, where $k < n$. To do this, we find a $k$-dimensional space onto which to project the data in such a way that the (orthogonal) projection error is minimal. More precisely, we find $k$ vectors $u^1, u^2, \ldots, u^k$ and take their linear span to project onto.
 
-Assume that we have a training set $\{x^1, x^2, \ldots, x^m\}$ of $n$-dimensional vectors. Before doing PCA, we must do some data pre-processing (feature scaling/mean normalization), since we want our features to have comparable range of values.
+Assume that we have a training set $\{x^1, x^2, \ldots, x^m\}$ of $n$-dimensional vectors. Before doing PCA, we must do some data pre-processing (feature scaling/mean normalization), since we want all the features to have comparable range of values.
 
 For each feature $x_j$, define $\mu_j = \dfrac{1}{m}\ds\sum_{i=1}^{m}{x^i_j}$ and let $s_j$ be either the standard deviation or the difference between max and min. Then replace each $x_j^i$ by $x_j^i = \dfrac{x_j^i - \mu_j}{s_j}$.
 
 After the data pre-processing step, we compute the covariance matrix of the initial dataset: $$\Sigma = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i(x^i)^T}.$$
 Notice that $x^i$ is an $(n\times 1)$-dimensional vector and $(x^i)^T$ is an $(1\times n)$-dimensional vector, thus $\Sigma$ is an $(n\times n)$-dimensional matrix.
 
-Then we compute the eigenvectors $U = [u^1, u^2, \ldots, u^n]$ of $\Sigma$, which are vectors in $\mathbb{R}^n$ since $\Sigma$ is a symmetric semi-positive definite matrix. To reduce our initial $n$-dimensional feature space, we keep only the first $k$ eigenvectors $U_\text{pr} = [u^1, u^2, \ldots, u^k]$, $k<n$, called principal components. Then, for each $i=1,\ldots, m$, we define the reduced features
+Then we compute the eigenvectors $U = [u^1, u^2, \ldots, u^n]$ of $\Sigma$, which are vectors in $\mathbb{R}^n$ since $\Sigma$ is a symmetric semi-positive definite matrix. To reduce our initial $n$-dimensional feature space, we keep only the first $k$ eigenvectors $U_\text{pr} = [u^1, u^2, \ldots, u^k]\in\mathbb{R}^{n\times k}$, $k<n$, called principal components. Then, for each $i=1,\ldots, m$, we define the reduced features
 $$z^i := U_\text{pr}^T x^i \in \mathbb{R}^k.$$
-Once we use PCA to compress the data, we can always reconstruct back the initial features. The we get back the approximations of out initial features $$x_{\text{approx}}^i = Uz^i,$$ where $U$ is the matrix of all eigenvalues of $\Sigma$.
+Once we use PCA to compress the data, we can always reconstruct back the initial features. Then we get back the approximations of out initial features $$x_{\text{approx}}^i = Uz^i,$$ where $U$ is the matrix of all eigenvalues of $\Sigma$.
 
 
 There is one problem remaining, how do we choose k, the number of principal components? One way we do this in practice is to choose $k$ to be the smallest value so that
@@ -1219,7 +1294,7 @@ It is a bad practice to use PCA for feature selection or overfitting prevention 
 
 Anomaly detection is a popular learning algorithm used in fraud detection, manufacturing, system monitoring, etc.
 
-Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ and, for any new example $x_{test}$, we want to know whether this new example is abnormal/anomalous (e.g. fraud, manufacturing defect, system error, etc.).
+Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}\in \mathbb{R}^n$ and, for any new example $x_{test}$, we want to know whether this new example is abnormal/anomalous (e.g. fraud, manufacturing defect, system error, etc.).
 
 We define a model $p(x)$ that tells us the probability that the example is not anomalous. We also use a threshold $\varepsilon$ as a dividing line so we can say which examples are anomalous and which are not.
 If the detector is flagging too many anomalous examples, then we need to decrease the threshold $\varepsilon$.
@@ -1227,12 +1302,12 @@ If the detector is flagging too many anomalous examples, then we need to decreas
 Recall the normal (Gaussian) distribution $\mathcal{N}(\mu, \sigma^2)$ density function
 $$p(x) = \dfrac{1}{\sigma\sqrt{2\pi}} \exp\left(-\dfrac{(x-\mu)^2}{2\sigma^2}\right).$$
 
-Assume we have a dataset $\{x^1, x^2,\ldots, x^m\}$ that is normally distributed $\mathcal{N}(\mu, \sigma^2)$. We can estimate $\mu$ from data by taking the sample mean
+IN general, $\{x^1, x^2,\ldots, x^m\}$ are normally distributed $\mathcal{N}(\mu, \sigma^2)$. We can estimate $\mu$ from data by taking the sample mean
 $$\mu = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x^i},$$
 and $\sigma^2$ by taking the sample variance
 $$\sigma^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x^i - \mu)}^2.$$
 
-To estimate the density function $p(x)$ for the training set $\{x^1, x^2,\ldots, x^m\}$, we assume that the features $x_j$ are normally distributed $\mathcal{N}(\mu_j, \sigma_j^2)$ (the features should not be necessarily independent, but the algorithm works better of they are).
+To estimate the density function $p(x)$ on the training set $\{x^1, x^2,\ldots, x^m\}$, we assume that the features $x_j$ are normally distributed $\mathcal{N}(\mu_j, \sigma_j^2)$ (the features should not be necessarily independent, but the algorithm works better of they are).
 
 We first estimate the parameters $\mu_j$ and $\sigma_j^2$ as above
 $$\mu_j = \dfrac{1}{m} \ds\sum_{i=1}^{m}{x_j^i}  \; ; \;\;\;  \sigma_j^2 = \dfrac{1}{m} \ds\sum_{i=1}^{m}{(x_j^i - \mu_j)}^2.$$
@@ -1244,49 +1319,46 @@ Thus, whenever we have a new example $x$, we compute $p(x)$ and say that $x$ is 
 
 \subsection*{Evaluate anomaly detectors}
 
-To evaluate an anomaly detector, we take a labeled data set, categorized into anomalous and non-anomalous examples ($y = 0$ if normal and $y = 1$ if anomalous). Among the data, take a large proportion of good, non-anomalous data for the training set on which to train $p(x)$. Then, take a smaller proportion of mixed anomalous and non-anomalous examples (you will usually have many more non-anomalous examples) for your cross-validation and test sets. For example, we may have a set where 0.2\% of the data is anomalous. We take 60\% of those examples, all of which are good ($y=0$) for the training set. We then take 20\% of the examples for the cross-validation set (with 0.1\% of the anomalous examples) and another 20\% from the test set (with another 0.1\% of the anomalous). In other words, we split the data 60/20/20 training/CV/test and then split the anomalous examples 50/50 between the CV and test sets.
+To evaluate an anomaly detector, we take a labeled data set, categorized into anomalous and non-anomalous examples ($y = 0$ if normal and $y = 1$ if anomalous). Take a large proportion of good, non-anomalous data from the training set on which to train $p(x)$. Then, take a smaller proportion of mixed anomalous and non-anomalous examples (you will usually have many more non-anomalous examples) for your cross-validation and test sets. For example, we may have a set where 0.2\% of the data is anomalous. We take 60\% of those examples, all of which are good ($y=0$) for the training set. We then take 20\% of the examples for the cross-validation set (with 0.1\% of the anomalous examples) and another 20\% from the test set (with another 0.1\% of the anomalous). In other words, we split the data 60/20/20 training/CV/test and then split the anomalous examples 50/50 between the CV and test sets.
 
-Fit the model $p(x)$ on the training set $\{x^1,\ldots ,x^m\}$. On a cross validation/test example $x$, predict: if $p(x) < \varepsilon$ (anomaly), then $y=1$ and if $p(x) ≥ \varepsilon$ (normal), then $y=0$. Possible evaluation metrics: precision/recall, $F_1$ score. We use the cross-validation set to choose parameter $\varepsilon$.
+Fit the model $p(x)$ on the training set. On a cross validation/test example $x$, predict: if $p(x) < \varepsilon$ (anomaly), then $y=1$ and if $p(x) ≥ \varepsilon$ (normal), then $y=0$. Possible evaluation metrics: precision/recall, $F_1$ score. We use the cross-validation set to choose parameter $\varepsilon$.
 
 \subsection*{Anomaly detection vs. supervised learning}
 
 Use anomaly detection when:
-
-We have a very small number of positive examples ($y=1$: 0-20 examples is common) and a large number of negative ($y=0$) examples.
-
-We have many different "types" of anomalies and it is hard for any algorithm to learn from positive examples what the anomalies look like; future anomalies may look nothing like any of the anomalous examples we've seen so far.
+\begin{itemize}
+\item We have a very small number of positive examples ($y=1$: 0-20 examples is common) and a large number of negative ($y=0$) examples.
+\item We have many different "types" of anomalies and it is hard for any algorithm to learn from positive examples what the anomalies look like; future anomalies may look nothing like any of the anomalous examples we've seen so far.
+\end{itemize}
 
 Use supervised learning when:
-
-We have a large number of both positive and negative examples. In other words, the training set is more evenly divided into classes.
-
-We have enough positive examples for the algorithm to get a sense of what new positives examples look like. The future positive examples are likely similar to the ones in the training set.
-
+\begin{itemize}
+\item We have a large number of both positive and negative examples. In other words, the training set is more evenly divided into classes.
+\item We have enough positive examples for the algorithm to get a sense of what new positives examples look like. The future positive examples are likely similar to the ones in the training set.
+\end{itemize}
 Choosing Features
 
-The features will greatly affect how well your anomaly detection algorithm works. We can check that our features are gaussian by plotting a histogram of our data and checking for the bell-shaped curve.
+The features will greatly affect how well your anomaly detection algorithm works. We can check that our features are gaussian by plotting a histogram of our data and checking for the bell-shaped curve or by using statistical tests.
 
-Some transforms we can try on an example feature x that does not have the bell-shaped curve are: $\log(x)$, $\log(1+x)$, $\sqrt{x}$, $x^{1/3}$. We can play with each of these to try and achieve the gaussian shape in our data.
-There is an error analysis procedure for anomaly detection that is very similar to the one in supervised learning.
-Our goal is for $p(x)$ to be large for normal examples and small for anomalous examples.
-One common problem is when $p(x)$ is similar for both types of examples. In this case, you need to examine the anomalous examples that are giving high probability in detail and try to figure out new features that will better distinguish the data.
-In general, choose features that might take on unusually large or small values in the event of an anomaly.
+Some transformations we can use on features that do not have the bell-shaped curve are: $\log(x)$, $\log(1+x)$, $\sqrt{x}$, $x^{1/3}$. We can play with each of these to achieve the Gaussian shape of the data.
+There is an error analysis procedure for anomaly detection that is very similar to the one in supervised learning. Our goal is for $p(x)$ to be large for normal examples and small for anomalous examples.
+One common problem is when $p(x)$ is similar for both types of examples. In this case, you need to examine the anomalous examples that are giving high probability in detail and try to figure out new features that will better distinguish the data. In general, choose features that might take on unusually large or small values in the event of an anomaly.
 
 
 \subsection*{Multivariate Gaussian Distribution}
 
-The multivariate gaussian distribution is an extension of anomaly detection and may (or may not) catch more anomalies.
+The multivariate Gaussian distribution is an extension of anomaly detection and may (or may not) catch more anomalies.
 
-Instead of modeling $p(x_1),p(x_2),\ldots, p(x_m)$, separately, we will model $p(x)$ all in one go. Our parameters will be: $\mu \in \mathbb{R}^n$ and $\Sigma\in \mathbb{R}^{n\times n}$ and
+Instead of modeling $p(x_1),p(x_2),\ldots, p(x_n)$, separately, we will model $p(x)$ all in one go. Our parameters will be: $\mu \in \mathbb{R}^n$ and $\Sigma\in \mathbb{R}^{n\times n}$ and
 $$p(x;\mu,\Sigma) = \dfrac{1}{(2\pi)^{n/2} |\Sigma|^{1/2}} \exp(-1/2(x-\mu)^T\Sigma^{-1}(x-\mu)).$$
-The important effect is that we can model oblong gaussian contours, allowing us to better fit data that might not fit into the normal circular contours.
+The important effect is that we can model oblong Gaussian contours, allowing us to better fit data that might not fit into the normal circular contours.
 Varying $\Sigma$ changes the shape, width, and orientation of the contours. Changing $\mu$ will move the center of the distribution.
 
-When doing anomaly detection with multivariate gaussian distribution, we compute $\mu$ and $\Sigma$ normally. We then compute $p(x)$ using the new formula in the previous section and flag an anomaly if $p(x) < \varepsilon$.
+When doing anomaly detection with multivariate gaussian distribution, we compute $\mu$ and $\Sigma$ from data. We then compute $p(x)$ using the new formula in the previous section and flag an anomaly if $p(x) < \varepsilon$.
 The original model for $p(x)$ corresponds to a multivariate Gaussian where the contours of $p(x;\mu,\Sigma)$ are axis-aligned.
 The multivariate Gaussian model can automatically capture correlations between different features of $x$.
 
-However, the original model maintains some advantages: it is computationally cheaper (no matrix to invert, which is costly for large number of features) and it performs well even with small training set size (in multivariate Gaussian model, it should be greater than the number of features for $\Sigma$ to be invertible).
+However, the original model maintains some advantages: it is computationally cheaper (no matrix to invert, which is costly for large number of features) and it performs well even with small training set size (in multivariate Gaussian model, $m$ should be greater than the number of features for $\Sigma$ to be invertible).
 
 
 \section{Recommender Systems}
@@ -1345,20 +1417,18 @@ To speed things up, we can simultaneously minimize our features and our paramete
 
 $$J(x,\theta) = \dfrac{1}{2} \displaystyle \sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)} - y^{(i,j)})^2 + \dfrac{\lambda}{2}\sum_{i=1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^2 + \dfrac{\lambda}{2}\sum_{j=1}^{n_u} \sum_{k=1}^{n} (\theta_k^{(j)})^2$$
 
-It looks very complicated, but we've only combined the cost function for theta and the cost function for $x$.
+It looks very complicated, but we've only combined the cost function for $\theta$ and the cost function for $x$.
 
 Because the algorithm can learn them itself, the bias units where $x_0=1$ have been removed, therefore $x\in\mathbb{ℝ}^n$ and $\theta \in\mathbb{ℝ}^n$.
 
 These are the steps in the algorithm:
-
-Initialize $x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)}$ to small random values. This serves to break symmetry and ensures that the algorithm learns features $x^{(i)},...,x^{(n_m)}$ that are different from each other.
-
-Minimize $J(x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)})$ using gradient descent (or an advanced optimization algorithm). E.g. for every $j=1,...,n_u, i=1,...n_m$:
+\begin{itemize}
+\item Initialize $x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)}$ to small random values. This serves to break symmetry and ensures that the algorithm learns features $x^{(i)},...,x^{(n_m)}$ that are different from each other.
+\item Minimize $J(x^{(i)},...,x^{(n_m)},\theta^{(1)},...,\theta^{(n_u)})$ using gradient descent (or an advanced optimization algorithm). E.g. for every $j=1,...,n_u, i=1,...,n_m$:
 $$x_k^{(i)} := x_k^{(i)} - \alpha\left (\displaystyle \sum_{j:r(i,j)=1}{((\theta^{(j)})^T x^{(i)} - y^{(i,j)}) \theta_k^{(j)}} + \lambda x_k^{(i)} \right)$$
-
 ​$$\theta_k^{(j)} := \theta_k^{(j)} - \alpha\left (\displaystyle \sum_{i:r(i,j)=1}{((\theta^{(j)})^T x^{(i)} - y^{(i,j)}) x_k^{(i)}} + \lambda \theta_k^{(j)} \right)$$
-​	​	
-For a user with parameters $\theta$ and a movie with (learned) features $x$, predict a star rating of $\theta^Tx$.
+\item For a user with parameters $\theta$ and a movie with (learned) features $x$, predict a star rating of $\theta^Tx$.
+​\end{itemize}​	
 
 \subsection*{Low Rank Matrix Factorization}
 
@@ -1384,7 +1454,7 @@ $$Y =
     4 & ? & ? & 0  \\
     0 & 0 & 5 & 4 \\
     0 & 0 & 5 & 0 \\
-\end{bmatrix}, 
+\end{bmatrix},
 \quad
  \mu =
 \begin{bmatrix}
@@ -1412,91 +1482,10 @@ Now, for a new user, the initial predicted values will be equal to the $\mu$ ter
 
 
 
-\chapter{Large Scale Machine Learning}
 
-We mainly benefit from a very large dataset when our algorithm has high variance when $m$ is small. Recall that if our algorithm has high bias, more data will not have any benefit.
 
-Datasets can often approach such sizes as $m = 100,000,000$. In this case, our gradient descent step will have to make a summation over all one hundred million examples. We will want to try to avoid this -- the approaches for doing so are described below.
 
-\section{Stochastic Gradient Descent}
 
-Stochastic gradient descent is an alternative to classic (or batch) gradient descent and is more efficient and scalable to large data sets.
-
-Stochastic gradient descent is written out in a different but similar way:
-
-$$cost(\theta,(x^{(i)}, y^{(i)})) = \dfrac{1}{2}(h_{\theta}(x^{(i)}) - y^{(i)})^2$$
-
-The only difference in the above cost function is the elimination of the $m$ constant within $\dfrac{1}{2}$
-
-$$J_{train}(\theta) = \dfrac{1}{m} \displaystyle \sum_{i=1}^m cost(\theta, (x^{(i)}, y^{(i)}))$$
-
-$J_{train}$ is now just the average of the cost applied to all of our training examples.
-
-The algorithm is as follows
-
-Randomly 'shuffle' the dataset 
-
-For $i = 1\dots m$
-
-$$\Theta_j := \Theta_j - \alpha (h_{\Theta}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}_j$$
-
-This algorithm will only try to fit one training example at a time. This way we can make progress in gradient descent without having to scan all m training examples first. Stochastic gradient descent will be unlikely to converge at the global minimum and will instead wander around it randomly, but usually yields a result that is close enough. Stochastic gradient descent will usually take 1-10 passes through your data set to get near the global minimum.
-
-\section{Mini-Batch Gradient Descent}
-
-Mini-batch gradient descent can sometimes be even faster than stochastic gradient descent. Instead of using all m examples as in batch gradient descent, and instead of using only 1 example as in stochastic gradient descent, we will use some in-between number of examples b.
-
-Typical values for b range from 2-100 or so.
-
-For example, with $b=10$ and $m=1000$:
-
-Repeat:
-
-For $i = 1,11,21,31,\dots,991$
-
-$$\theta_j := \theta_j - \alpha \dfrac{1}{10} \displaystyle \sum_{k=i}^{i+9} (h_\theta(x^{(k)}) - y^{(k)})x_j^{(k)}$$
-
-We're simply summing over ten examples at a time. The advantage of computing more than one example at a time is that we can use vectorized implementations over the b examples.
-
-\section{Stochastic Gradient Descent Convergence}
-
-How do we choose the learning rate $\alpha$ for stochastic gradient descent? Also, how do we debug stochastic gradient descent to make sure it is getting as close as possible to the global optimum?
-
-One strategy is to plot the average cost of the hypothesis applied to every 1000 or so training examples. We can compute and save these costs during the gradient descent iterations.
-
-With a smaller learning rate, it is possible that you may get a slightly better solution with stochastic gradient descent. That is because stochastic gradient descent will oscillate and jump around the global minimum, and it will make smaller random jumps with a smaller learning rate.
-
-If you increase the number of examples you average over to plot the performance of your algorithm, the plot's line will become smoother.
-
-With a very small number of examples for the average, the line will be too noisy and it will be difficult to find the trend.
-
-One strategy for trying to actually converge at the global minimum is to slowly decrease $\alpha$ over time. For example $\alpha = \dfrac{const1}{iterationNumber + const2}$.
-However, this is not often done because people don't want to have to fiddle with even more parameters.
-
-\section{Online Learning}
-
-With a continuous stream of users to a website, we can run an endless loop that gets $(x,y)$, where we collect some user actions for the features in $x$ to predict some behavior $y$.
-
-You can update $\theta$ for each individual $(x,y)$ pair as you collect them. This way, you can adapt to new pools of users, since you are continuously updating theta.
-
-\section{Map Reduce and Data Parallelism}
-
-We can divide up batch gradient descent and dispatch the cost function for a subset of the data to many different machines so that we can train our algorithm in parallel.
-
-You can split your training set into z subsets corresponding to the number of machines you have. On each of those machines calculate $$\displaystyle \sum_{i=p}^{q}(h_{\theta}(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)}$$
-, where we've split the data starting at $p$ and ending at $q$.
-
-MapReduce will take all these dispatched (or 'mapped') jobs and 'reduce' them by calculating:
-
-$$\Theta_j := \Theta_j - \alpha \dfrac{1}{z}(temp_j^{(1)} + temp_j^{(2)} + \cdots + temp_j^{(z)})$$
-
-For all $j = 0, \dots, n$.
-
-This is simply taking the computed cost from all the machines, calculating their average, multiplying by the learning rate, and updating theta.
-
-Your learning algorithm is MapReduceable if it can be expressed as computing sums of functions over the training set. Linear regression and logistic regression are easily parallelizable.
-
-For neural networks, you can compute forward propagation and back propagation on subsets of your data on many machines. Those machines can report their derivatives back to a 'master' server that will combine them.
 
 
 
