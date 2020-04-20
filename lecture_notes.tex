@@ -36,7 +36,7 @@ These lecture notes are mainly based on Andrew Ng's Machine Learning course on \
 
 \chapter{Introduction}
 
-\section{What is machine learning?}
+\section{What is Machine Learning?}
 
 Arthur Samuel described Machine Learning as:
 \begin{quote}
@@ -55,14 +55,14 @@ In general, any machine learning problem can be assigned to one of the two broad
 In supervised learning, we are given a data set and already know what our correct output should look like, having the idea that there is a relationship between the input and the output.
 Supervised learning problems are categorized into \textbf{regression} and \textbf{classification} problems. In a regression problem, we are trying to predict results within a continuous output, meaning that we are trying to map input variables to some continuous function. In a classification problem, we are instead trying to predict results in a discrete output. In other words, we are trying to map input variables into discrete categories.
 
-\textbf{Example 1}
+\textbf{Example}
 
 Given data about the size of houses on the real estate market, try to predict their price. Price as a function of size is a continuous output, so this is a regression problem.
 We could turn this example into a classification problem by instead making our output about whether the house "sells for more or less than the asking price." Here we are classifying the houses based on price into two discrete categories.
 
 \newpage
 
-\textbf{Example 2}
+\textbf{Example}
 \begin{description}
  \item [Regression:] Given a picture of male/female, we have to predict his/her age on the basis of given picture.
  \item [Classification:] Given a picture of male/female, we have to predict whether he/she is of high school, college, graduate age. Another example for classification - banks have to decide whether or not to give a loan to someone on the basis of his credit history.
@@ -78,11 +78,53 @@ Unsupervised learning, on the other hand, allows us to approach problems with li
 \item[Non-clustering:] The "Cocktail Party Algorithm", which can find structure in messy data such as the identification of individual voices and music from a mesh of sounds at a cocktail party. See \href{https://en.wikipedia.org/wiki/Cocktail_party_effect}{this link}.
 \end{description}
 
-\textbf{TODO:}
+
+\section{What is a Machine Learning algorithm?}
+
+Assume we have a set of labeled data $\{x, y \}$. The goal is to build a good and useful approximation of $y$ using a learning model $g(x \mid \theta)$, depending on a set of parameters $\theta$.  
+
+To do this, we have to make three choices:
 \begin{itemize}
-  \item what is a machine learning problem in general ?
-  \item hypothesis, cost, optimization, performance, etc.
+  \item the \textbf{model} $g(x \mid \theta)$:
+    \begin{itemize}
+      \item the model $g$ defines a hypothesis class $\mathcal{H}$ and a particular set of parameters $\theta$ defines a hypothesis $h \in \mathcal{H}$,
+      \item the model is selected by the user based on prior knowledge of the application; this is also called inductive bias (extra assumptions we have to make to have learning possible),
+      \item the hypothesis $h$ is chosen by a learning algorithm using the training set $\{x, y \}$.
+    \end{itemize}
+  \item the \textbf{loss function} $\mathcal{L}$:
+    \begin{itemize}
+      \item computes the difference between the desired output $y$ and the approximation made by the model $\hat{y} := g(x \mid \theta)$,
+      \item the total approximation error/loss can be written as $$\mathbb{E}(\theta \mid x) = \ds\sum{\mathcal{L}(y, \hat{y})},$$
+      \item for classification problems, $\mathcal{L}$ simply checks for equality; in regression problems, we may take $\mathcal{L}$ as being the square of the difference between $y$  and $\hat{y}$
+    \end{itemize}
+  \item the \textbf{optimization method} to find $\theta$ that minimizes the total error, i.e. $$ \theta = \textrm{argmin}_{\theta}\; \mathbb{E}(\theta \mid x).$$
+    \begin{itemize}
+      \item in regression problems, we can solve analytically for the optimum, 
+      \item with more complex models/error functions, we need more complex optimization methods, e.g. gradient-based methods. 
+    \end{itemize}
 \end{itemize}
+
+The \textbf{learning algorithm} consists in finding a hypothesis $h \in \mathcal{H}$ that approximates $y$ as good as possible. Several conditions must be met for this to work well:
+\begin{itemize}
+  \item the model $g$ should have enough capacity to learn the data,
+  \item there should be enough training data to allow us to find the correct hypothesis $h \in \mathcal{H}$,
+  \item we should have a good optimization method that finds the right hypothesis given the training data.
+\end{itemize}
+
+Apart from the training set, the model should be able to generalize, i.e. to approximate correctly future examples that are not part of the training set. Generalization is actually the scope of any machine learning algorithm. For best generalization, one should match the complexity of the hypothesis class $\mathcal{H}$ with the complexity of the function underlying the data. 
+
+Underfitting occurs when $\mathcal{H}$ is less complex than the data, e.g. trying to fit a line to data sampled from a third order polynomial. In this case, we should increase the complexity of $\mathcal{H}$.
+
+Overfitting occurs when $\mathcal{H}$ is too complex compared to the data. An overcomplex hypothesis may not learn only the underlying function, but also the noise in the data. Giving more training data helps up to a point, but there are other methods to prevent overfitting as well. 
+
+Model selection is then a trade-off of the following three components:
+\begin{itemize}
+  \item the capacity of the hypothesis class $\mathcal{H}$ (the complexity of the hypothesis we fit to data),
+  \item the amount of the training data, 
+  \item the generalization error on new examples. 
+\end{itemize}
+
+Most frequently, we use the training set to fit a hypothesis to the data and use another set, called validation or testing set, to test hypothesis' ability to generalize. 
 
 
 \chapter{Linear Models}
@@ -568,7 +610,7 @@ We basically choose one class and then lump all the others into a single second 
 
 \subsubsection*{Overfitting/underfitting}
 
-High bias or underfitting is when the form of our hypothesis function $h$ maps poorly to the trend of the data. It is usually caused by a function that is too simple or uses less features, e.g. if we take 
+High bias or underfitting is when the form of our hypothesis function $h$ maps poorly to the trend of the data. It is usually caused by a function that is too simple or uses less features, e.g. if we take
 $h_\theta(x) = \theta_0 + \theta_1x_1 + \theta_2x_2$ then we make an initial assumption that a linear model fits the training data well and will be able to generalize but that may not be the case.
 
 At the other extreme, overfitting or high variance is caused by a hypothesis function that fits the available data but does not generalize well to predict new data. It is usually caused by a complicated function that creates a lot of unnecessary curves and angles unrelated to the data.
@@ -872,7 +914,7 @@ In the case of backpropagation, we compute the "error" $\delta_j^{l}$ of every n
 For the output layer, we have that: $$\delta^{L} = a^{L} - y,$$
 where $L$ is the number of layers and $a^{L}$ is the vector of outputs of the activation units of the last layer. So the "error" values for the output layer are simply the differences of the nodes in the output layer and the correct values in $y$.
 
-To get the errors of the layers before the output layer, we use an equation that steps us back from right to left: 
+To get the errors of the layers before the output layer, we use an equation that steps us back from right to left:
 $$\delta^{l} = (\Theta^{l+1})^T \delta^{l+1}\ .*\ g^\prime(z^{l}),$$
 where $z^l$ is defined by \eqref{eq:nn-def-z's} and $g^\prime$ is the derivative of $g$.
 The errors of layer $l$ are calculated by multiplying the errors in the next layer with the matrix of weights of layer $l$. We then multiply this element-wise ($.*$) with the derivative of the activation function $g$ evaluated in $z^l$.
@@ -998,7 +1040,7 @@ Most of the time, our models will suffer of one of the following problems (see t
 
 If we use a regularized cost function, then choosing a very large parameter $\lambda$ may cause high bias and choosing a very small $\lambda$ may cause high variance. To find the optimal $\lambda$ we use the cross-validation set.
 
-\textbf{TODO:} short explanation of bias-variance trade-off. 
+\textbf{TODO:} short explanation of bias-variance trade-off.
 
 \begin{center}
 \includegraphics[height = 2in]{Images/bias_variance_lambda}
