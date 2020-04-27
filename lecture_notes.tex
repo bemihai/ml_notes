@@ -81,7 +81,7 @@ Unsupervised learning, on the other hand, allows us to approach problems with li
 
 \section{What is a Machine Learning algorithm?}
 
-Assume we have a set of labeled data $\{x, y \}$. The goal is to build a good and useful approximation of $y$ using a learning model $g(x \mid \theta)$, depending on a set of parameters $\theta$.  
+Assume we have a set of labeled data $\{x, y \}$. The goal is to build a good and useful approximation of $y$ using a learning model $g(x \mid \theta)$, depending on a set of parameters $\theta$.
 
 To do this, we have to make three choices:
 \begin{itemize}
@@ -99,8 +99,8 @@ To do this, we have to make three choices:
     \end{itemize}
   \item the \textbf{optimization method} to find $\theta$ that minimizes the total error, i.e. $$ \theta = \textrm{argmin}_{\theta}\; \mathbb{E}(\theta \mid x).$$
     \begin{itemize}
-      \item in regression problems, we can solve analytically for the optimum, 
-      \item with more complex models/error functions, we need more complex optimization methods, e.g. gradient-based methods. 
+      \item in regression problems, we can solve analytically for the optimum,
+      \item with more complex models/error functions, we need more complex optimization methods, e.g. gradient-based methods.
     \end{itemize}
 \end{itemize}
 
@@ -111,20 +111,20 @@ The \textbf{learning algorithm} consists in finding a hypothesis $h \in \mathcal
   \item we should have a good optimization method that finds the right hypothesis given the training data.
 \end{itemize}
 
-Apart from the training set, the model should be able to generalize, i.e. to approximate correctly future examples that are not part of the training set. Generalization is actually the scope of any machine learning algorithm. For best generalization, one should match the complexity of the hypothesis class $\mathcal{H}$ with the complexity of the function underlying the data. 
+Apart from the training set, the model should be able to generalize, i.e. to approximate correctly future examples that are not part of the training set. Generalization is actually the scope of any machine learning algorithm. For best generalization, one should match the complexity of the hypothesis class $\mathcal{H}$ with the complexity of the function underlying the data.
 
 Underfitting occurs when $\mathcal{H}$ is less complex than the data, e.g. trying to fit a line to data sampled from a third order polynomial. In this case, we should increase the complexity of $\mathcal{H}$.
 
-Overfitting occurs when $\mathcal{H}$ is too complex compared to the data. An overcomplex hypothesis may not learn only the underlying function, but also the noise in the data. Giving more training data helps up to a point, but there are other methods to prevent overfitting as well. 
+Overfitting occurs when $\mathcal{H}$ is too complex compared to the data. An overcomplex hypothesis may not learn only the underlying function, but also the noise in the data. Giving more training data helps up to a point, but there are other methods to prevent overfitting as well.
 
 Model selection is then a trade-off of the following three components:
 \begin{itemize}
   \item the capacity of the hypothesis class $\mathcal{H}$ (the complexity of the hypothesis we fit to data),
-  \item the amount of the training data, 
-  \item the generalization error on new examples. 
+  \item the amount of the training data,
+  \item the generalization error on new examples.
 \end{itemize}
 
-Most frequently, we use the training set to fit a hypothesis to the data and use another set, called validation or testing set, to test hypothesis' ability to generalize. 
+Most frequently, we use the training set to fit a hypothesis to the data and use another set, called validation or testing set, to test hypothesis' ability to generalize.
 
 
 \chapter{Linear Models}
@@ -447,7 +447,7 @@ h_\theta(x) = g(\theta^Tx),
 where $g$ is the logistic (or sigmoid) function: $$g(z) = \dfrac{1}{1+\mathrm{e}^{-z}}.$$
 
 \begin{center}
-\includegraphics[height = 1.5in]{Images/sigmoid}
+\includegraphics[height = 1.5in]{ml_images/sigmoid}
 \end{center}
 
 As we see on the plot, the sigmoid function maps any real number to the $(0, 1)$ interval, making it useful for transforming an arbitrary-valued function into a function better suited for classification.
@@ -498,19 +498,17 @@ $$\cost(h_\theta(x), y) = \left\{\begin{matrix}
 
 This new cost function, defined by equation \eqref{eq:log-reg-cost}, is convex so we can apply gradient descent to find the optimal $\theta$.
 
-\textbf{TODO:} log likelihood
-
 \hspace{1.0in}
 
 \begin{center}
 \begin{minipage}{0.48\textwidth}
  \centering
- \includegraphics[width=.8\linewidth]{Images/cost_0}
+ \includegraphics[width=.8\linewidth]{ml_images/cost_0}
  %\captionof*{figure}{Cost when y = 0}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
  \centering
- \includegraphics[width=.8\linewidth]{Images/cost_1}
+ \includegraphics[width=.8\linewidth]{ml_images/cost_1}
  %\captionof*{figure}{Cost when y = 1}
 \end{minipage}
 \end{center}
@@ -1035,7 +1033,7 @@ Most of the time, our models will suffer of one of the following problems (see t
 \end{description}
 
 \begin{center}
-\includegraphics[height = 2in]{Images/bias_variance}
+\includegraphics[height = 2in]{ml_images/bias_variance}
 \end{center}
 
 If we use a regularized cost function, then choosing a very large parameter $\lambda$ may cause high bias and choosing a very small $\lambda$ may cause high variance. To find the optimal $\lambda$ we use the cross-validation set.
@@ -1043,14 +1041,14 @@ If we use a regularized cost function, then choosing a very large parameter $\la
 \textbf{TODO:} short explanation of bias-variance trade-off.
 
 \begin{center}
-\includegraphics[height = 2in]{Images/bias_variance_lambda}
+\includegraphics[height = 2in]{ml_images/bias_variance_lambda}
 \end{center}
 
 \section{Learning curves}
 
 Training only 3 examples will easily have 0 errors because we can always find a quadratic curve that exactly touches 3 points. As the training set gets larger, the error for a quadratic function increases, but it will flatten  out after a certain $m$. We can observe this by drawing learning curves.
 \begin{center}
-\includegraphics[height = 2in]{Images/learn_curve}
+\includegraphics[height = 2in]{ml_images/learn_curve}
 \end{center}
 
 If the algorithm suffers from high bias (underfitting), then:
@@ -1060,7 +1058,7 @@ If the algorithm suffers from high bias (underfitting), then:
 \end{itemize}
 
 \begin{center}
-\includegraphics[height = 2in]{Images/learn_curve_bias}
+\includegraphics[height = 2in]{ml_images/learn_curve_bias}
 \end{center}
 
 If the algorithm suffers from high variance (overfitting), then:
@@ -1070,7 +1068,7 @@ If the algorithm suffers from high variance (overfitting), then:
 \end{itemize}
 
 \begin{center}
-\includegraphics[height = 2in]{Images/learn_curve_variance}
+\includegraphics[height = 2in]{ml_images/learn_curve_variance}
 \end{center}
 
 Thus, if a learning algorithm is suffering from high bias, getting more training data will not (by itself) help much. On the other hand, in case of high variance, getting more training data is likely to help.
@@ -1151,11 +1149,11 @@ We define a new optimization objective for SVM by using some linear approximatio
 \begin{center}
 \begin{minipage}{0.48\textwidth}
  \centering
- \includegraphics[width=.8\linewidth]{Images/cost_1_approx}
+ \includegraphics[width=.8\linewidth]{ml_images/cost_1_approx}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
  \centering
- \includegraphics[width=.8\linewidth]{Images/cost_0_approx}
+ \includegraphics[width=.8\linewidth]{ml_images/cost_0_approx}
 \end{minipage}
 \end{center}
 
@@ -1182,7 +1180,7 @@ With these changes, the hypothesis $h_\theta$ of the SVM becomes a discriminant 
 
 \hspace{1.0in}
 \begin{center}
-\includegraphics[height = 1.8in]{Images/svm}
+\includegraphics[height = 1.8in]{ml_images/svm}
 \end{center}
 
 In SVM, the decision boundary has the special property that it is as far away as possible from both the positive and the negative examples. The distance from the decision boundary to the nearest example is called the margin. Since SVM maximizes this margin, it is often described as a large margin classifier. Notice that a large margin is only achieved when the regularization constant $C$ is very large. Thus, if we have outliers that can affect the decision boundary, we can reduce $C$.
@@ -1206,7 +1204,7 @@ Notice that choosing a particular set of landmarks defines the shape of the deci
 
 \hspace{1.0in}
 \begin{center}
-\includegraphics[height = 1.8in]{Images/kernel}
+\includegraphics[height = 1.8in]{ml_images/kernel}
 \end{center}
 
 We can choose the landmarks to be exactly the training examples. Given a training set $(x^1, y^1), \ldots, (x^m, y^m)$, take $l^{j} = x^j$, and define the features $f_j$ as above, for all $j=1, \ldots, m$.
@@ -1287,7 +1285,7 @@ If there is no clue on how to choose the number of clusters, we can automaticall
 
 \hspace{1.0in}
 \begin{center}
-\includegraphics[height = 1.8in]{Images/elbow}
+\includegraphics[height = 1.8in]{ml_images/elbow}
 \end{center}
 
 Another way to choose $K$ is to observe how well $K$-means performs on a downstream purpose. In other words, we can choose $K$ that proves to be most useful for the goal we are trying to achieve by using these clusters.
